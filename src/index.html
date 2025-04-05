@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ritmo dos Sinais</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="toggle" onclick="toggleDarkMode()">🌙</div>
+  <div id="score-container">Pontuação: <span id="score">0</span></div>
+
+  <div id="app" class="flex-container">
+    <!-- Menu -->
+    <div class="card" id="menu-screen">
+      <h1>Ritmo dos Sinais</h1>
+      <p>Escolha uma lição para começar:</p>
+      <button class="btn btn-option" onclick="startLesson(1)">Lição 1: Tipos de Onda</button>
+      <button class="btn btn-option" onclick="startLesson(2)">Lição 2: Filtros</button>
+      <button class="btn btn-option" onclick="startLesson(3)">Lição 3: Modulação</button>
+    </div>
+
+    <!-- Jogo -->
+    <div class="card" id="game-screen">
+      <h1 id="lesson-title">Lição</h1>
+      <button class="btn btn-primary" onclick="playSound()">🔊 Ouvir Som</button>
+      <div id="options-container"></div>
+      <p id="result"></p>
+      <button class="btn" onclick="backToMenu()">🔙 Voltar ao Menu</button>
+    </div>
+
+    <!-- Card de Informação -->
+    <div class="card" id="info-card">
+      <h2>Informação</h2>
+      <p id="info-text">Acierte um exercício para ver detalhes aqui.</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

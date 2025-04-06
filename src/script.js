@@ -23,6 +23,17 @@ const infoContent = {
   am: 'Modulação AM: variação de amplitude.',
   fm: 'Modulação FM: variação de frequência.'
 };
+const audioTypes = {
+  'Onda senoidal': 'sine',
+  'Onda quadrada': 'square',
+  'Onda dente de serra': 'sawtooth',
+  'Filtro passa-baixa': 'lowpass',
+  'Filtro passa-alta': 'highpass',
+  'Filtro passa-banda': 'bandpass',
+  'Modulação AM': 'am',
+  'Modulação FM': 'fm'
+};
+
 
 function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
@@ -70,13 +81,15 @@ function playSound() {
   if (!audioContext) return;
   const dur = 1.0;
   if (currentLesson===1) {
-    const osc = audioContext.createOscillator(); osc.type=currentAnswer;
+    const osc = audioContext.createOscillator(); 
+    osc.type = audioTypes[currentAnswer];
     osc.frequency.setValueAtTime(440,audioContext.currentTime);
     osc.connect(audioContext.destination); osc.start(); setTimeout(()=>osc.stop(),dur*1000);
   }
   if (currentLesson===2) {
     const osc = audioContext.createOscillator(); const filter = audioContext.createBiquadFilter();
-    osc.type='sine'; filter.type=currentAnswer;
+    osc.type='sine'; 
+    filter.type = audioTypes[currentAnswer];
     filter.frequency.setValueAtTime(1000,audioContext.currentTime);
     osc.connect(filter).connect(audioContext.destination); osc.start(); setTimeout(()=>osc.stop(),dur*1000);
   }
@@ -84,7 +97,7 @@ function playSound() {
     const carrier = audioContext.createOscillator(); const mod = audioContext.createOscillator(); const mg = audioContext.createGain();
     carrier.type='sine'; carrier.frequency.setValueAtTime(440,audioContext.currentTime);
     mod.frequency.setValueAtTime(30,audioContext.currentTime);
-    if (currentAnswer==='am') { mg.gain.setValueAtTime(0.5,audioContext.currentTime); mod.connect(mg).connect(carrier.gain);
+    if (audioTypes[currentAnswer] === 'am') { mg.gain.setValueAtTime(0.5,audioContext.currentTime); mod.connect(mg).connect(carrier.gain);
     } else { mg.gain.setValueAtTime(100,audioContext.currentTime); mod.connect(mg).connect(carrier.frequency); }
     carrier.connect(audioContext.destination); mod.start(); carrier.start(); setTimeout(()=>{carrier.stop();mod.stop();},dur*1000);
   }
@@ -95,7 +108,7 @@ function checkAnswer(selected) {
   if (selected===currentAnswer) {
     showOverlay('success');
     lessonScores[currentLesson]+=10; score+=10;
-    infoText.textContent = infoContent[selected];
+    infoText.textContent = infoContent[audioTypes[selected]];
     resultText.textContent = '✅ Correto!'; resultText.style.color='var(--primary-green)';
   } else {
     showOverlay('error');

@@ -7,8 +7,19 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div id="welcome-screen">
+  <h1>Bem-vindo ao Jogo de Sinais</h1>
+  <p>Este jogo é baseado na disciplina de <strong>Sinais e Sistemas Lineares</strong> e tem como objetivo ensinar conceitos de forma interativa.</p>
+  <button class="btn" onclick="startLessonMode()">Modo Lição</button>
+  <button class="btn" onclick="startInfinityMode()">Modo Infinito</button>
+  </div>
+
   <div class="toggle" onclick="toggleDarkMode()">🌙</div>
-  <div id="score-container">Pontuação: <span id="score">0</span></div>
+  <div id="score-container">
+    Pontuação: <span id="score">0</span>
+    <!-- indicador de vidas, oculto por padrão -->
+    <span id="vidas" style="margin-left:12px; display:none;">❤️❤️❤️</span>
+  </div>
 
   <div class="flex-container">
     <div class="card" id="menu-screen">
@@ -23,7 +34,7 @@
       <button class="btn btn-primary" onclick="playSound()">🔊 Ouvir Som</button>
       <div id="options-container"></div>
       <p id="result"></p>
-      <button class="btn" onclick="backToMenu()">🔙 Menu</button>
+      <button id="btn-voltar-menu" class="btn" onclick="backToMenu()">🔙 Menu</button>
     </div>
     <div class="card" id="info-card">
       <h2>Informação</h2>

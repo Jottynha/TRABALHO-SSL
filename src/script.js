@@ -2,6 +2,10 @@ let audioContext;
 let currentLesson = 0;
 let currentAnswer = '';
 let score = 0;
+let isInfinityMode = false;
+let lives = 3;
+
+const welcomeScreen = document.getElementById('welcome-screen');
 const lessonScores = {1:0,2:0,3:0};
 const threshold = 50;
 const scoreEl = document.getElementById('score');
@@ -34,6 +38,40 @@ const audioTypes = {
   'Modulação FM': 'fm'
 };
 
+function startLessonMode() {
+  document.getElementById('vidas').style.display = 'none';
+  isInfinityMode = false;
+  welcomeScreen.style.display = 'none';
+  menuScreen.style.display = 'block';
+  document.querySelector('.progress-container').style.display = 'block';
+}
+
+function startInfinityMode() {
+  document.getElementById('btn-voltar-menu').style.display = 'none';
+  isInfinityMode = true;
+  currentLesson = 0; // modo misto
+  lives = 3;
+  document.getElementById('vidas').textContent = '❤️❤️❤️';
+  document.getElementById('vidas').style.display = 'inline';
+  document.querySelector('.progress-container').style.display = 'none';
+  score = 0;
+  for (let l in lessonScores) lessonScores[l] = 0;
+  welcomeScreen.style.display = 'none';
+  menuScreen.style.display = 'none';
+  gameScreen.style.display = 'block';
+  resultText.textContent = '';
+  infoText.textContent = 'Acerte para ver detalhes aqui.';
+  updateScore();
+  updateProgress();
+  initAudio();
+  setupQuestion();
+}
+
+
+lives = 3;
+  document.getElementById('vidas').textContent = '❤️❤️❤️';
+  document.getElementById('vidas').style.display = 'inline';
+  document.querySelector('.progress-container').style.display = 'none';
 
 function toggleDarkMode() {
   document.body.classList.toggle('dark-mode');
@@ -62,12 +100,26 @@ function backToMenu() {
 
 function setupQuestion() {
   optionsBox.innerHTML = '';
+
   let opts = [];
-  if (currentLesson===1) opts=['Onda senoidal','Onda quadrada','Onda dente de serra'];
-  if (currentLesson===2) opts=['Filtro passa-baixa','Filtro passa-alta','Filtro passa-banda'];
-  if (currentLesson===3) opts=['Modulação AM','Modulação FM'];
+  if (isInfinityMode) {
+    const allOptions = {
+      1: ['Onda senoidal','Onda quadrada','Onda dente de serra'],
+      2: ['Filtro passa-baixa','Filtro passa-alta','Filtro passa-banda'],
+      3: ['Modulação AM','Modulação FM']
+    };
+    const randomLesson = Math.floor(Math.random() * 3) + 1;
+    currentLesson = randomLesson;
+    opts = allOptions[randomLesson];
+  } else {
+    if (currentLesson===1) opts=['Onda senoidal','Onda quadrada','Onda dente de serra'];
+    if (currentLesson===2) opts=['Filtro passa-baixa','Filtro passa-alta','Filtro passa-banda'];
+    if (currentLesson===3) opts=['Modulação AM','Modulação FM'];
+  }
+
   opts.sort(()=>Math.random()-0.5);
   currentAnswer = opts[Math.floor(Math.random()*opts.length)];
+
   opts.forEach(opt=>{
     const b = document.createElement('button');
     b.className = 'btn btn-option';
@@ -76,6 +128,7 @@ function setupQuestion() {
     optionsBox.appendChild(b);
   });
 }
+
 
 function playSound() {
   if (!audioContext) return;
@@ -112,14 +165,31 @@ function checkAnswer(selected) {
     resultText.textContent = '✅ Correto!'; resultText.style.color='var(--primary-green)';
   } else {
     showOverlay('error');
-    lessonScores[currentLesson]=Math.max(lessonScores[currentLesson]-5,0);
-    score=Math.max(score-5,0);
+    if (isInfinityMode) {
+      lives--;
+      // atualiza visual
+      const hearts = '❤️'.repeat(lives) + '🤍'.repeat(3 - lives);
+      document.getElementById('vidas').textContent = hearts;
+      if (lives <= 0) {
+        // fim de jogo: volta ao menu e mantém apenas o score máximo
+        setTimeout(voltarParaMenu, 500);
+        return;
+      }
+      resultText.textContent = `❌ Errado! Vidas: ${lives}`;
+      resultText.style.color = '#f44336';
+    } else {
+      lessonScores[currentLesson]=Math.max(lessonScores[currentLesson]-5,0);
+      score=Math.max(score-5,0);
+      resultText.textContent = '❌ Errado!'; resultText.style.color='#f44336';
+    }
+    
     resultText.textContent = '❌ Errado!'; resultText.style.color='#f44336';
   }
   updateScore(); updateProgress();
   if (lessonScores[currentLesson]>=threshold) unlockLesson(currentLesson+1);
   setTimeout(setupQuestion,1200);
 }
+
 
 function updateScore() {
   scoreEl.textContent = score;

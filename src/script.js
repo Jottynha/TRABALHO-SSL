@@ -344,9 +344,33 @@ function updateScore() {
 }
 
 function updateProgress() {
-  const pct = Math.min((lessonScores[currentLesson]/threshold)*100,100);
-  progressBar.style.width = pct + '%';
+  const progress = lessonScores[currentLesson] || 0;
+  const percentage = Math.min(progress / threshold * 100, 100);
+  progressBar.style.width = `${percentage}%`;
+  
+  // Verifica se a lição foi completada
+  if (progress >= threshold) {
+    showLessonCompletePopup();
+  }
 }
+
+function showLessonCompletePopup() {
+  // Verifica se o pop-up já foi mostrado para evitar repetição
+  if (!document.body.classList.contains(`lesson-${currentLesson}-completed`)) {
+    document.body.classList.add(`lesson-${currentLesson}-completed`);
+    
+    Swal.fire({
+      title: '🎉 Parabéns!',
+      text: `Você completou a Lição ${currentLesson}!`,
+      icon: 'success',
+      confirmButtonText: 'Continuar',
+      customClass: {
+        popup: 'popup-finalizacao'
+      }
+    });
+  }
+}
+
 
 function unlockLesson(n) {
   const btn = document.getElementById(`lesson-btn-${n}`);

@@ -18,15 +18,41 @@ const resultText = document.getElementById('result');
 const progressBar = document.getElementById('progress-bar');
 const overlay = document.getElementById('overlay');
 const infoContent = {
-  sine: 'Onda senoidal: forma pura, base da síntese sonora.',
-  square: 'Onda quadrada: harmônicos ímpares, timbre áspero.',
-  sawtooth: 'Onda dente de serra: todos os harmônicos.',
-  lowpass: 'Filtro passa-baixa: passa baixas frequências.',
-  highpass: 'Filtro passa-alta: passa altas frequências.',
-  bandpass: 'Filtro passa-banda: isola faixa central.',
-  am: 'Modulação AM: variação de amplitude.',
-  fm: 'Modulação FM: variação de frequência.'
+  sine: {
+    text: 'Onda senoidal: forma pura, base da síntese sonora.',
+    extra: 'Presente em sinais analógicos e sistemas harmônicos.'
+  },
+  square: {
+    text: 'Onda quadrada: harmônicos ímpares, timbre áspero.',
+    extra: 'Usada em circuitos digitais e sintetizadores.'
+  },
+  sawtooth: {
+    text: 'Onda dente de serra: todos os harmônicos.',
+    extra: 'Ideal para síntese subtrativa de som.'
+  },
+  lowpass: {
+    text: 'Filtro passa-baixa: passa baixas frequências.',
+    extra: 'Bloqueia ruído de alta frequência em sinais.'
+  },
+  highpass: {
+    text: 'Filtro passa-alta: passa altas frequências.',
+    extra: 'Remove componentes de baixa frequência.'
+  },
+  bandpass: {
+    text: 'Filtro passa-banda: isola faixa central.',
+    extra: 'Comum em rádio e análise espectral.'
+  },
+  am: {
+    text: 'Modulação AM: variação de amplitude.',
+    extra: 'Usado em rádio AM e transmissão de voz.'
+  },
+  fm: {
+    text: 'Modulação FM: variação de frequência.',
+    extra: 'Utilizado em rádio FM e telefonia digital.'
+  }
 };
+
+
 const audioTypes = {
   'Onda senoidal': 'sine',
   'Onda quadrada': 'square',
@@ -129,6 +155,45 @@ function setupQuestion() {
   });
 }
 
+function desenharOnda(tipo) {
+  const canvas = document.getElementById('wave-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  const w = canvas.width;
+  const h = canvas.height;
+  const midY = h / 2;
+
+  ctx.beginPath();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = '#2AA64F';
+
+  for (let x = 0; x < w; x++) {
+    let y;
+    let t = x / w;
+
+    switch(tipo) {
+      case 'sine':
+        y = Math.sin(t * 2 * Math.PI * 4);
+        break;
+      case 'square':
+        y = Math.sign(Math.sin(t * 2 * Math.PI * 4));
+        break;
+      case 'sawtooth':
+        y = 2 * (t * 4 - Math.floor(t * 4 + 0.5));
+        break;
+      default:
+        y = 0;
+    }
+
+    y = midY - y * (h / 2.5);
+    if (x === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  }
+
+  ctx.stroke();
+}
+
 
 function playSound() {
   if (!audioContext) return;
@@ -161,7 +226,10 @@ function checkAnswer(selected) {
   if (selected===currentAnswer) {
     showOverlay('success');
     lessonScores[currentLesson]+=10; score+=10;
-    infoText.textContent = infoContent[audioTypes[selected]];
+    const key = audioTypes[currentAnswer];
+    infoText.textContent = infoContent[key].text;
+    document.getElementById('info-extra').textContent = infoContent[key].extra;
+    desenharOnda(key);
     resultText.textContent = '✅ Correto!'; resultText.style.color='var(--primary-green)';
   } else {
     showOverlay('error');

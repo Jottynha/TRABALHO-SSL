@@ -154,12 +154,11 @@ function setupQuestion() {
     optionsBox.appendChild(b);
   });
 }
-
 function desenharOnda(tipo) {
   const canvas = document.getElementById('wave-canvas');
   const ctx = canvas.getContext('2d');
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
   const w = canvas.width;
   const h = canvas.height;
   const midY = h / 2;
@@ -168,31 +167,85 @@ function desenharOnda(tipo) {
   ctx.lineWidth = 2;
   ctx.strokeStyle = '#2AA64F';
 
-  for (let x = 0; x < w; x++) {
-    let y;
-    let t = x / w;
+  if (tipo === 'sine' || tipo === 'square' || tipo === 'sawtooth') {
+    for (let x = 0; x < w; x++) {
+      let y;
+      let t = x / w;
 
-    switch(tipo) {
-      case 'sine':
-        y = Math.sin(t * 2 * Math.PI * 4);
-        break;
-      case 'square':
-        y = Math.sign(Math.sin(t * 2 * Math.PI * 4));
-        break;
-      case 'sawtooth':
-        y = 2 * (t * 4 - Math.floor(t * 4 + 0.5));
-        break;
-      default:
-        y = 0;
+      switch (tipo) {
+        case 'sine':
+          y = Math.sin(t * 2 * Math.PI * 4);
+          break;
+        case 'square':
+          y = Math.sign(Math.sin(t * 2 * Math.PI * 4));
+          break;
+        case 'sawtooth':
+          y = 2 * (t * 4 - Math.floor(t * 4 + 0.5));
+          break;
+        default:
+          y = 0;
+      }
+
+      y = midY - y * (h / 2.5);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
     }
+  }
 
-    y = midY - y * (h / 2.5);
-    if (x === 0) ctx.moveTo(x, y);
-    else ctx.lineTo(x, y);
+  // Filtros
+  else if (tipo === 'lowpass') {
+    ctx.moveTo(0, h * 0.2);
+    ctx.lineTo(w * 0.4, h * 0.2);
+    ctx.lineTo(w * 0.6, h * 0.8);
+    ctx.lineTo(w, h * 0.8);
+  }
+  else if (tipo === 'highpass') {
+    ctx.moveTo(0, h * 0.8);
+    ctx.lineTo(w * 0.4, h * 0.8);
+    ctx.lineTo(w * 0.6, h * 0.2);
+    ctx.lineTo(w, h * 0.2);
+  }
+  else if (tipo === 'bandpass') {
+    ctx.moveTo(0, h * 0.8);
+    ctx.lineTo(w * 0.3, h * 0.8);
+    ctx.lineTo(w * 0.4, h * 0.2);
+    ctx.lineTo(w * 0.6, h * 0.2);
+    ctx.lineTo(w * 0.7, h * 0.8);
+    ctx.lineTo(w, h * 0.8);
+  }
+
+  // Modulação AM
+  else if (tipo === 'am') {
+    const carrierFreq = 30;
+    const modFreq = 3;
+    const modAmplitude = 0.5;
+
+    for (let x = 0; x < w; x++) {
+      const t = x / w;
+      const mod = 1 + modAmplitude * Math.sin(2 * Math.PI * modFreq * t);
+      const y = midY + mod * (h / 4) * Math.sin(2 * Math.PI * carrierFreq * t);
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+  }
+
+  // Modulação FM
+  else if (tipo === 'fm') {
+    const carrierFreq = 10;
+    const modFreq = 2;
+    const modIndex = 10;
+
+    for (let x = 0; x < w; x++) {
+      const t = x / w;
+      const y = midY + (h / 3) * Math.sin(2 * Math.PI * carrierFreq * t + modIndex * Math.sin(2 * Math.PI * modFreq * t));
+      if (x === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
   }
 
   ctx.stroke();
 }
+
 
 
 function playSound() {
@@ -211,14 +264,39 @@ function playSound() {
     filter.frequency.setValueAtTime(1000,audioContext.currentTime);
     osc.connect(filter).connect(audioContext.destination); osc.start(); setTimeout(()=>osc.stop(),dur*1000);
   }
-  if (currentLesson===3) {
-    const carrier = audioContext.createOscillator(); const mod = audioContext.createOscillator(); const mg = audioContext.createGain();
-    carrier.type='sine'; carrier.frequency.setValueAtTime(440,audioContext.currentTime);
-    mod.frequency.setValueAtTime(30,audioContext.currentTime);
-    if (audioTypes[currentAnswer] === 'am') { mg.gain.setValueAtTime(0.5,audioContext.currentTime); mod.connect(mg).connect(carrier.gain);
-    } else { mg.gain.setValueAtTime(100,audioContext.currentTime); mod.connect(mg).connect(carrier.frequency); }
-    carrier.connect(audioContext.destination); mod.start(); carrier.start(); setTimeout(()=>{carrier.stop();mod.stop();},dur*1000);
-  }
+  if (currentLesson === 3) {
+    const carrier = audioContext.createOscillator();
+    const mod = audioContext.createOscillator();
+    const mg = audioContext.createGain(); // modulation gain
+    const output = audioContext.createGain(); // final output
+  
+    carrier.type = 'sine';
+    carrier.frequency.setValueAtTime(440, audioContext.currentTime);
+    mod.frequency.setValueAtTime(30, audioContext.currentTime);
+  
+    if (audioTypes[currentAnswer] === 'am') {
+      // Inicializa o ganho com 1 (nível base), varia entre 0.5 e 1.5
+      mg.gain.setValueAtTime(0.5, audioContext.currentTime);
+      
+      // Conecta modulação ao ganho do volume (AM)
+      mod.connect(mg);
+      mg.connect(output.gain);     // output.gain é o volume da portadora
+      carrier.connect(output);
+      output.connect(audioContext.destination);
+    } else {
+      // FM: modula frequência diretamente
+      mg.gain.setValueAtTime(100, audioContext.currentTime);
+      mod.connect(mg).connect(carrier.frequency);
+      carrier.connect(audioContext.destination);
+    }
+  
+    mod.start();
+    carrier.start();
+    setTimeout(() => {
+      carrier.stop();
+      mod.stop();
+    }, dur * 1000);
+  } 
 }
 
 function checkAnswer(selected) {

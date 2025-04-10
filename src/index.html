@@ -1,53 +1,62 @@
+<!DOCTYPE html>
 <html lang="pt">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ritmo dos Sinais</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-  <div id="welcome-screen">
-  <h1>Bem-vindo ao Jogo de Sinais</h1>
-  <p>Este jogo é baseado na disciplina de <strong>Sinais e Sistemas Lineares</strong> e tem como objetivo ensinar conceitos de forma interativa.</p>
-  <button class="btn" onclick="startLessonMode()">Modo Lição</button>
-  <button class="btn" onclick="startInfinityMode()">Modo Infinito</button>
-  </div>
-
-  <div class="toggle" onclick="toggleDarkMode()">🌙</div>
-  <div id="score-container">
-    Pontuação: <span id="score">0</span>
-    <!-- indicador de vidas, oculto por padrão -->
-    <span id="vidas" style="margin-left:12px; display:none;">❤️❤️❤️</span>
-  </div>
-
-  <div class="flex-container">
-    <div class="card" id="menu-screen">
-      <h1>Ritmo dos Sinais</h1>
-      <p>Escolha uma lição:</p>
-      <button id="lesson-btn-1" class="btn btn-option" onclick="startLesson(1)">Lição 1: Tipos de Onda</button>
-      <button id="lesson-btn-2" class="btn btn-option" onclick="startLesson(2)" disabled>Lição 2: Filtros</button>
-      <button id="lesson-btn-3" class="btn btn-option" onclick="startLesson(3)" disabled>Lição 3: Modulação</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ritmo dos Sinais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
+  <body>
+    <div id="welcome-screen">
+      <h1>Bem-vindo ao Jogo de Sinais</h1>
+      <p>
+        Este jogo é baseado na disciplina de <strong>Sinais e Sistemas
+        Lineares</strong> e tem como objetivo ensinar conceitos de forma
+        interativa.
+      </p>
+      <button class="btn" id="btn-lesson-mode">Modo Lição</button>
+      <button class="btn" id="btn-infinity-mode">Modo Infinito</button>
     </div>
-    <div class="card" id="game-screen">
-      <h1 id="lesson-title">Lição</h1>
-      <button class="btn btn-primary" onclick="playSound()">🔊 Ouvir Som</button>
-      <div id="options-container"></div>
-      <p id="result"></p>
-      <button id="btn-voltar-menu" class="btn" onclick="backToMenu()">🔙 Menu</button>
-    </div>
-    <div class="card" id="info-card">
-      <h2>Informação</h2>
-      <canvas id="wave-canvas" width="260" height="80" style="margin-bottom: 12px;"></canvas>
-      <p id="info-text">Acerte para ver detalhes aqui.</p>
-      <p id="info-extra"></p>
-    </div>
-  </div>
 
-  <div class="progress-container"><div id="progress-bar"></div></div>
-  <div id="overlay" class="overlay"></div>
+    <div class="toggle" id="toggle-dark">🌙</div>
+    <div id="score-container">
+      Pontuação: <span id="score">0</span>
+      <!-- indicador de vidas, oculto por padrão -->
+      <span id="vidas" style="margin-left:12px; display:none;">❤️❤️❤️</span>
+    </div>
 
-  <script src="script.js"></script>
-</body>
+    <div class="flex-container">
+      <div class="card" id="menu-screen">
+        <h1>Ritmo dos Sinais</h1>
+        <p>Escolha uma lição:</p>
+        <button id="lesson-btn-1" class="btn btn-option">Lição 1: Tipos de Onda</button>
+        <button id="lesson-btn-2" class="btn btn-option" disabled>Lição 2: Filtros</button>
+        <button id="lesson-btn-3" class="btn btn-option" disabled>Lição 3: Modulação</button>
+        <button id="lesson-btn-4" class="btn btn-option" disabled>Lição 4: Sinais Periodicos</button>
+      </div>
+      <div class="card" id="game-screen">
+        <h1 id="lesson-title">Lição</h1>
+        <button class="btn btn-primary" id="btn-play-sound">🔊 Ouvir Som</button>
+        <div id="options-container"></div>
+        <p id="result"></p>
+        <button id="btn-voltar-menu" class="btn">🔙 Menu</button>
+      </div>
+      <div class="card" id="info-card">
+        <h2>Informação</h2>
+        <canvas id="wave-canvas" width="260" height="80" style="margin-bottom: 12px;"></canvas>
+        <p id="info-text">Acerte para ver detalhes aqui.</p>
+        <p id="info-extra"></p>
+      </div>
+    </div>
+
+    <div class="progress-container">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <!-- Importa o ponto de entrada dos módulos -->
+    <script type="module" src="js/main.js"></script>
+  </body>
 </html>

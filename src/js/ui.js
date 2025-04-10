@@ -18,6 +18,11 @@ export const DOM = {
     overlay: document.getElementById('overlay')
   };
   
+  export function updateHighScore(highScore) {
+    const highScoreEl = document.getElementById('highscore-value');
+    highScoreEl.textContent = highScore;
+  }
+
   export function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
   }

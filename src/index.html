@@ -43,11 +43,17 @@
         <p id="result"></p>
         <button id="btn-voltar-menu" class="btn">🔙 Menu</button>
       </div>
-      <div class="card" id="info-card">
-        <h2>Informação</h2>
-        <canvas id="wave-canvas" width="260" height="80" style="margin-bottom: 12px;"></canvas>
-        <p id="info-text">Acerte para ver detalhes aqui.</p>
-        <p id="info-extra"></p>
+      <div class="column-container">
+        <div class="card" id="info-card">
+          <h2>Informação</h2>
+          <canvas id="wave-canvas" width="260" height="80" style="margin-bottom: 12px;"></canvas>
+          <p id="info-text">Acerte para ver detalhes aqui.</p>
+          <p id="info-extra"></p>
+        </div>
+        <div class="card" id="highscore-card">
+          <h2>Maior Pontuação</h2>
+          <p id="highscore-value" class="score-number">0</p>
+        </div>
       </div>
     </div>
 

@@ -16,6 +16,47 @@
   align-items: center;
 }
 
+/* Estilização para o card de maior pontuação */
+#highscore-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+  padding: 20px;
+  width: 280px;
+  transition: background 0.3s;
+  text-align: center;  /* Centraliza o conteúdo do card */
+}
+
+/* Se estiver usando modo escuro */
+body.dark-mode #highscore-card {
+  background: var(--card-dark);
+}
+
+/* Estilização para o título do card */
+#highscore-card h2 {
+  color: var(--primary-green);
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+/* Estilização especial para o número da pontuação */
+.score-number {
+  font-size: 2.5em;      /* Aumenta o tamanho da fonte para destaque */
+  font-weight: bold;     /* Deixa em negrito para dar ênfase */
+  color: var(--primary-green);  /* Cor principal para coerência */
+  margin: 0;             /* Remove margens para melhor alinhamento */
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);  /* Efeito de sombra sutil */
+}
+
+
+.column-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+
 :root {
   --primary-green: #2AA64F;
   --dark-green: #1F8A3D;

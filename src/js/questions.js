@@ -3,6 +3,8 @@ import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup,
 import { playFeedbackSound } from './audio.js';
 import { desenharOnda } from './drawing.js';
 import { returnToWelcome } from './main.js';
+import { updateHighScore } from './ui.js';
+
 
 export const state = {
   currentLesson: 0,
@@ -11,7 +13,8 @@ export const state = {
   lives: 3,
   isInfinityMode: false,
   lessonScores: { 1: 0, 2: 0, 3: 0 },
-  threshold: 50
+  threshold: 50,
+  highScore: 0
 };
 
 export const audioTypes = {
@@ -142,5 +145,10 @@ export function checkAnswer(selected) {
     unlockLesson(state.currentLesson + 1);
     showLessonCompletePopup(state.currentLesson);
   }
+  if (state.score > state.highScore) {
+    state.highScore = state.score;
+    updateHighScore(state.highScore);  // Atualiza o DOM com a maior pontuação
+  }
+
   setTimeout(setupQuestion, 1200);
 }

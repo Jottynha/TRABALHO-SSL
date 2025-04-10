@@ -2,6 +2,7 @@
 import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup, unlockLesson } from './ui.js';
 import { playFeedbackSound } from './audio.js';
 import { desenharOnda } from './drawing.js';
+import { returnToWelcome } from './main.js';
 
 export const state = {
   currentLesson: 0,
@@ -112,11 +113,17 @@ export function checkAnswer(selected) {
       const hearts = '❤️'.repeat(state.lives) + '🤍'.repeat(3 - state.lives);
       DOM.vidasEl.textContent = hearts;
       if (state.lives <= 0) {
-        setTimeout(() => {
-          // lógica de retorno ao menu
-        }, 500);
-        return;
+        Swal.fire({
+          title: 'Fim de Jogo!',
+          text: 'Você perdeu todas as vidas!',
+          icon: 'error',
+          confirmButtonText: 'Voltar para o início'
+        }).then(() => {
+          returnToWelcome();
+        });
+        return; // Interrompe a execução da função
       }
+      
       DOM.resultText.textContent = `❌ Errado! Vidas: ${state.lives}`;
       DOM.resultText.style.color = '#f44336';
     } else {

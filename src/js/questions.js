@@ -96,6 +96,31 @@ export function setupQuestion() {
   });
 }
 
+export function updateCompletedLessons() {
+  const container = document.getElementById('completed-lessons-content');
+  container.innerHTML = ''; // Limpa o conteúdo atual
+
+  // Usamos state.lessonScores e state.threshold para checar se a lição foi concluída
+  let completadas = [];
+  for (let lesson in state.lessonScores) {
+    if (state.lessonScores[lesson] >= state.threshold) {
+      completadas.push(`Lição ${lesson}`);
+    }
+  }
+
+  if (completadas.length === 0) {
+    container.innerHTML = '<p>Nenhuma lição concluída ainda.</p>';
+  } else {
+    completadas.forEach(l => {
+      const p = document.createElement('p');
+      p.textContent = l;
+      container.appendChild(p);
+    });
+  }
+}
+
+
+
 export function checkAnswer(selected) {
   playFeedbackSound(selected === state.currentAnswer ? 'success' : 'error');
   if (selected === state.currentAnswer) {
@@ -144,6 +169,7 @@ export function checkAnswer(selected) {
   if (state.lessonScores[state.currentLesson] >= state.threshold) {
     unlockLesson(state.currentLesson + 1);
     showLessonCompletePopup(state.currentLesson);
+    updateCompletedLessons();
   }
   if (state.score > state.highScore) {
     state.highScore = state.score;
@@ -152,3 +178,4 @@ export function checkAnswer(selected) {
 
   setTimeout(setupQuestion, 1200);
 }
+

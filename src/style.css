@@ -5,6 +5,30 @@
   justify-content: center;
   height: 100vh;
 }
+
+#completed-lessons-card {
+  margin: 20px auto;
+  width: 280px;
+  padding: 16px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+  text-align: left;
+}
+
+#completed-lessons-card h2 {
+  color: var(--primary-green);
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+#completed-lessons-content p {
+  font-size: 14px;
+  margin: 4px 0;
+  line-height: 1.4;
+}
+
+
 .btn-small {
   padding: 6px 12px;
   font-size: 14px;

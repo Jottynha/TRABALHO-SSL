@@ -1,10 +1,9 @@
 // js/questions.js
 import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup, unlockLesson } from './ui.js';
 import { playFeedbackSound } from './audio.js';
-import { desenharOnda } from './drawing.js';
+import { desenharOnda, drawScaledSignal, drawUnitStep } from './drawing.js';
 import { returnToWelcome } from './main.js';
 import { updateHighScore } from './ui.js';
-import { drawUnitStep } from './drawing.js';
 
 
 export const state = {
@@ -13,7 +12,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 , 4:0},
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0},
   threshold: 50,
   highScore: 0
 };
@@ -28,7 +27,9 @@ export const audioTypes = {
   'Modulação AM': 'am',
   'Modulação FM': 'fm',
   'u(t + t0)':'shiftleft', 
-  'u(t - t0)':'shiftright'
+  'u(t - t0)':'shiftright',
+  'Compressão': 'compress',
+  'Expansão': 'expand'
 };
 
 export const infoContent = {
@@ -71,6 +72,14 @@ export const infoContent = {
   shiftright: {
     text: 'Deslocamento para a Direita: atrasa o sinal no tempo.',
     extra: 'Empregado em análise de resposta temporal e filtragem de sinais.'
+  },
+  compress: {
+    text: 'Compressão: reduz o volume de um sinal.',
+    extra: 'Usado em sistemas de controle e processamento digital.'
+  },
+  expand: {
+    text: 'Expansão: aumenta o volume de um sinal.',
+    extra: 'Usado em sistemas de controle e processamento digital.'
   }
 };
 
@@ -87,11 +96,23 @@ export function setupQuestion() {
       1: ['Onda senoidal', 'Onda quadrada', 'Onda dente de serra'],
       2: ['Filtro passa-baixa', 'Filtro passa-alta', 'Filtro passa-banda'],
       3: ['Modulação AM', 'Modulação FM'],
-      4: ['u(t + t0)', 'u(t - t0)']
+      4: ['u(t + t0)', 'u(t - t0)'],
+      5: ['Compressão', 'Expansão']
     };
-    const randomLesson = Math.floor(Math.random() * 4) + 1;
+    const randomLesson = Math.floor(Math.random() * 5) + 1;
     state.currentLesson = randomLesson;
     opts = allOptions[randomLesson];
+    if (allOptions[4]){
+      const displacement = Math.random() < 0.5 ? -50 : 50;
+      drawUnitStep(ctx, displacement);
+      state.currentAnswer = displacement > 0 ? 'u(t - t0)' : 'u(t + t0)';    
+    }
+    if (allOptions[5]){
+      const constant = Math.random() < 0.5 ? 0.5 : 2;
+      drawScaledSignal(ctx, constant);
+      state.currentAnswer = constant > 1 ? 'Compressão' : 'Expansão';    
+    }
+
   } else {
     const questionTextElement = document.getElementById('question-text'); // Elemento para exibir a pergunta
     if (state.currentLesson === 1) {
@@ -110,6 +131,10 @@ export function setupQuestion() {
       opts = ['u(t + t0)', 'u(t - t0)'];
       questionTextElement.textContent = 'Qual é a função correta?'; // Pergunta para a lição 4
     }
+    if (state.currentLesson === 5) {
+      opts = ['Compressão', 'Expansão'];
+      questionTextElement.textContent = 'Qual é o tipo de mudança de escala? Considerando o sinal azul como o padrão.'; // Pergunta para a lição 5
+    }
   }
 
   
@@ -120,6 +145,14 @@ export function setupQuestion() {
     const displacement = Math.random() < 0.5 ? -50 : 50;
     drawUnitStep(ctx, displacement);
     state.currentAnswer = displacement > 0 ? 'u(t - t0)' : 'u(t + t0)';    
+    canvas_result.style.display = 'none';
+  }
+  if (state.currentLesson === 5) {
+    playSoundButton.disabled = true;
+    canvas.style.display = 'block';
+    const constant = Math.random() < 0.5 ? 0.5 : 2;
+    drawScaledSignal(ctx, constant);
+    state.currentAnswer = constant > 1 ? 'Compressão' : 'Expansão';    
     canvas_result.style.display = 'none';
   }
   else {
@@ -179,6 +212,9 @@ export function checkAnswer(selected) {
     DOM.resultText.style.color = 'var(--primary-green)';
   } else {
     showOverlay('error');
+    if (state.currentLesson === 4 || state.currentLesson === 5) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
     if (state.isInfinityMode) {
       state.lives--;
       const hearts = '❤️'.repeat(state.lives) + '🤍'.repeat(3 - state.lives);

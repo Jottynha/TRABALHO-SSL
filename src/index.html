@@ -23,7 +23,6 @@
     <div class="toggle" id="toggle-dark">🌙</div>
     <div id="score-container">
       Pontuação: <span id="score">0</span>
-      <!-- indicador de vidas, oculto por padrão -->
       <span id="vidas" style="margin-left:12px; display:none;">❤️❤️❤️</span>
     </div>
 
@@ -34,11 +33,12 @@
         <button id="lesson-btn-1" class="btn btn-option">Lição 1: Tipos de Onda</button>
         <button id="lesson-btn-2" class="btn btn-option" disabled>Lição 2: Filtros</button>
         <button id="lesson-btn-3" class="btn btn-option" disabled>Lição 3: Modulação</button>
-        <button id="lesson-btn-4" class="btn btn-option">Lição 4: Deslocamento de Sinais</button>
+        <button id="lesson-btn-4" class="btn btn-option" disabled>Lição 4: Deslocamento de Sinais</button>
+        <button id="lesson-btn-5" class="btn btn-option" >Lição 5: Compressão e Expansão de Sinais</button>
       </div>
       <div class="card" id="game-screen">
         <h1 id="lesson-title">Lição</h1>
-        <p id="question-text">Aqui será exibida a pergunta.</p> <!-- Novo elemento para a pergunta -->
+        <p id="question-text">Aqui será exibida a pergunta.</p> 
         <button class="btn btn-primary" id="btn-play-sound" disabled>🔊 Ouvir Som</button>
         <canvas id="wave-canvas-game" width="260" height="180" style="border-radius: 8px;" disabled></canvas>
         <div id="options-container"></div>
@@ -69,8 +69,6 @@
       <div id="progress-bar"></div>
     </div>
     <div id="overlay" class="overlay"></div>
-
-    <!-- Importa o ponto de entrada dos módulos -->
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

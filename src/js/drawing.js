@@ -80,21 +80,16 @@ export function desenharOnda(tipo) {
   }
 
   export function drawUnitStep(ctx, displacement) {
-    // Limpar o canvas
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  
-    // Configurar o estilo do gráfico
     ctx.strokeStyle = 'blue';
     ctx.lineWidth = 2;
-  
-    // Criar gradiente para o fundo
     const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
-    gradient.addColorStop(0, '#e0f7fa'); // Azul claro
-    gradient.addColorStop(1, '#b2ebf2'); // Azul mais escuro
+    gradient.addColorStop(0, '#e0f7fa'); 
+    gradient.addColorStop(1, '#b2ebf2'); 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
   
-    ctx.strokeStyle = '#000'; // Preto para os eixos
+    ctx.strokeStyle = '#000';
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(0, ctx.canvas.height / 2); // Eixo X
@@ -141,3 +136,66 @@ export function desenharOnda(tipo) {
     ctx.shadowColor = 'transparent';
   }
   
+  export function drawScaledSignal(ctx, scaleFactor) {
+    // Limpar o canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+    // Configurar o estilo do gráfico
+    ctx.strokeStyle = 'red';
+    ctx.lineWidth = 2;
+  
+    // Criar gradiente para o fundo
+    const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
+    gradient.addColorStop(0, '#ffebee'); // Vermelho claro
+    gradient.addColorStop(1, '#ffcdd2'); // Vermelho mais escuro
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+    // Desenhar os eixos
+    ctx.strokeStyle = '#000'; // Preto para os eixos
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, ctx.canvas.height / 2); // Eixo X
+    ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+    ctx.moveTo(ctx.canvas.width / 2, 0); // Eixo Y
+    ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+    ctx.stroke();
+  
+    // Desenhar o sinal "Normal"
+    ctx.strokeStyle = 'blue'; // Azul para o sinal normal
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+  
+    const centerX = ctx.canvas.width / 2;
+    const centerY = ctx.canvas.height / 2;
+    const amplitude = 50; // Amplitude do sinal
+    const frequency = 0.05; // Frequência base do sinal
+  
+    for (let x = 0; x < ctx.canvas.width; x++) {
+      const normalY = centerY - amplitude * Math.sin(frequency * (x - centerX)); // Onda senoidal normal
+      if (x === 0) {
+        ctx.moveTo(x, normalY);
+      } else {
+        ctx.lineTo(x, normalY);
+      }
+    }
+  
+    ctx.stroke();
+  
+    // Desenhar o sinal escalonado
+    ctx.strokeStyle = 'red'; // Vermelho para o sinal escalonado
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+  
+    for (let x = 0; x < ctx.canvas.width; x++) {
+      const scaledX = (x - centerX) * scaleFactor; // Aplicar o fator de escala
+      const scaledY = centerY - amplitude * Math.sin(frequency * scaledX); // Onda senoidal escalonada
+      if (x === 0) {
+        ctx.moveTo(x, scaledY);
+      } else {
+        ctx.lineTo(x, scaledY);
+      }
+    }
+  
+    ctx.stroke();
+}

@@ -198,4 +198,75 @@ export function desenharOnda(tipo) {
     }
   
     ctx.stroke();
+
+  ctx.font = '10px Poppins, sans-serif';
+  ctx.fillStyle = 'blue';
+  ctx.fillText('Sinal Original', 10, 10);
+  ctx.fillStyle = 'red';
+  ctx.fillText('Sinal com Mudança de Escala', 10, 30);
+}
+
+export function drawAmplitudeChange(ctx, amplitudeFactor) {
+  // Limpar o canvas
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+  // Criar um fundo com gradiente (opcional)
+  const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
+  gradient.addColorStop(0, '#f1f8e9'); // Verde muito claro
+  gradient.addColorStop(1, '#dcedc8'); // Verde claro
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+  // Desenhar os eixos
+  ctx.strokeStyle = '#000'; // Preto
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  // Eixo X
+  ctx.moveTo(0, ctx.canvas.height / 2);
+  ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+  // Eixo Y
+  ctx.moveTo(ctx.canvas.width / 2, 0);
+  ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+  ctx.stroke();
+  
+  // Parâmetros do sinal
+  const centerX = ctx.canvas.width / 2;
+  const centerY = ctx.canvas.height / 2;
+  const baseAmplitude = 50;  // Amplitude padrão do sinal
+  const frequency = 0.05;    // Frequência do sinal
+  
+  // Desenhar o sinal original (em azul)
+  ctx.strokeStyle = 'blue';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let x = 0; x < ctx.canvas.width; x++) {
+    const y = centerY - baseAmplitude * Math.sin(frequency * (x - centerX));
+    if (x === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+  
+  // Desenhar o sinal com amplitude alterada (em vermelho)
+  ctx.strokeStyle = 'red';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  for (let x = 0; x < ctx.canvas.width; x++) {
+    const y = centerY - (baseAmplitude * amplitudeFactor) * Math.sin(frequency * (x - centerX));
+    if (x === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+  
+  // Opcional: Adicionar uma legenda para identificar os sinais
+  ctx.font = '10px Poppins, sans-serif';
+  ctx.fillStyle = 'blue';
+  ctx.fillText('Sinal Original', 10, 10);
+  ctx.fillStyle = 'red';
+  ctx.fillText('Sinal com Amplitude Alterada', 10, 30);
 }

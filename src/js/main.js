@@ -71,7 +71,7 @@ function initUI() {
   document.getElementById('lesson-btn-3').addEventListener('click', () => startLesson(3));
   document.getElementById('lesson-btn-4').addEventListener('click', () => startLesson(4));
   document.getElementById('lesson-btn-5').addEventListener('click', () => startLesson(5));
-
+  document.getElementById('lesson-btn-6').addEventListener('click', () => startLesson(6));
   // Botão para voltar ao menu
   DOM.btnVoltarMenu.addEventListener('click', returnToWelcome);
 

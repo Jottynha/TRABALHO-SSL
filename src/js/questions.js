@@ -4,6 +4,7 @@ import { playFeedbackSound } from './audio.js';
 import { desenharOnda } from './drawing.js';
 import { returnToWelcome } from './main.js';
 import { updateHighScore } from './ui.js';
+import { drawUnitStep } from './drawing.js';
 
 
 export const state = {
@@ -12,7 +13,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 },
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4:0},
   threshold: 50,
   highScore: 0
 };
@@ -25,7 +26,9 @@ export const audioTypes = {
   'Filtro passa-alta': 'highpass',
   'Filtro passa-banda': 'bandpass',
   'Modulação AM': 'am',
-  'Modulação FM': 'fm'
+  'Modulação FM': 'fm',
+  'u(t + t0)':'shiftleft', 
+  'u(t - t0)':'shiftright'
 };
 
 export const infoContent = {
@@ -60,8 +63,21 @@ export const infoContent = {
   fm: {
     text: 'Modulação FM: variação de frequência.',
     extra: 'Utilizado em rádio FM e telefonia digital.'
+  },
+  shiftleft: {
+    text: 'Deslocamento para a Esquerda: adianta o sinal no tempo.',
+    extra: 'Usado para simular antecipações em sistemas de controle e processamento digital.'
+  },
+  shiftright: {
+    text: 'Deslocamento para a Direita: atrasa o sinal no tempo.',
+    extra: 'Empregado em análise de resposta temporal e filtragem de sinais.'
   }
 };
+
+const playSoundButton = document.getElementById('btn-play-sound');
+const canvas = document.getElementById('wave-canvas-game');
+const canvas_result = document.getElementById('wave-canvas');
+const ctx = canvas.getContext('2d');
 
 export function setupQuestion() {
   DOM.optionsContainer.innerHTML = '';
@@ -70,23 +86,50 @@ export function setupQuestion() {
     const allOptions = {
       1: ['Onda senoidal', 'Onda quadrada', 'Onda dente de serra'],
       2: ['Filtro passa-baixa', 'Filtro passa-alta', 'Filtro passa-banda'],
-      3: ['Modulação AM', 'Modulação FM']
+      3: ['Modulação AM', 'Modulação FM'],
+      4: ['u(t + t0)', 'u(t - t0)']
     };
-    const randomLesson = Math.floor(Math.random() * 3) + 1;
+    const randomLesson = Math.floor(Math.random() * 4) + 1;
     state.currentLesson = randomLesson;
     opts = allOptions[randomLesson];
   } else {
-    if (state.currentLesson === 1)
+    const questionTextElement = document.getElementById('question-text'); // Elemento para exibir a pergunta
+    if (state.currentLesson === 1) {
       opts = ['Onda senoidal', 'Onda quadrada', 'Onda dente de serra'];
-    if (state.currentLesson === 2)
+      questionTextElement.textContent = 'Qual é o tipo de onda?'; // Pergunta para a lição 1
+    }
+    if (state.currentLesson === 2) {
       opts = ['Filtro passa-baixa', 'Filtro passa-alta', 'Filtro passa-banda'];
-    if (state.currentLesson === 3)
+      questionTextElement.textContent = 'Qual é o tipo de filtro?'; // Pergunta para a lição 2
+    }
+    if (state.currentLesson === 3) {
       opts = ['Modulação AM', 'Modulação FM'];
+      questionTextElement.textContent = 'Qual é o tipo de modulação?'; // Pergunta para a lição 3
+    }
+    if (state.currentLesson === 4) {
+      opts = ['u(t + t0)', 'u(t - t0)'];
+      questionTextElement.textContent = 'Qual é a função correta?'; // Pergunta para a lição 4
+    }
+  }
+
+  
+  if (state.currentLesson === 4) {
+    playSoundButton.disabled = true;
+    canvas.style.display = 'block';
+    // Gerar deslocamento aleatório (-50 para esquerda, +50 para direita)
+    const displacement = Math.random() < 0.5 ? -50 : 50;
+    drawUnitStep(ctx, displacement);
+    state.currentAnswer = displacement > 0 ? 'u(t - t0)' : 'u(t + t0)';    
+    canvas_result.style.display = 'none';
+  }
+  else {
+    canvas.style.display = 'none';
+    playSoundButton.disabled = false;
   }
 
   opts.sort(() => Math.random() - 0.5);
   state.currentAnswer = opts[Math.floor(Math.random() * opts.length)];
-
+  DOM.optionsContainer.innerHTML = '';
   opts.forEach((opt) => {
     const b = document.createElement('button');
     b.className = 'btn btn-option';

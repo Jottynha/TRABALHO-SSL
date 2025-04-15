@@ -6,6 +6,7 @@
   height: 100vh;
 }
 
+
 #completed-lessons-card {
   margin: 20px auto;
   width: 280px;
@@ -15,6 +16,8 @@
   box-shadow: 0 4px 12px var(--shadow);
   text-align: left;
 }
+
+
 
 #completed-lessons-card h2 {
   color: var(--primary-green);
@@ -112,9 +115,10 @@ body.dark-mode { background: var(--dark-bg); color: var(--text-light); }
   border-radius: 12px;
   box-shadow: 0 4px 12px var(--shadow);
   padding: 20px;
-  width: 280px;
+  width: 300px;
   transition: background 0.3s;
 }
+
 body.dark-mode .card { background: var(--card-dark); }
 h1 { color: var(--primary-green); margin-bottom: 16px; font-weight: 600; }
 h2 { color: var(--primary-green); margin-bottom: 12px; font-size: 20px; }
@@ -150,3 +154,9 @@ h2 { color: var(--primary-green); margin-bottom: 12px; font-size: 20px; }
 }
 .overlay.success { background: rgba(42,166,79,0.5); opacity: 1; }
 .overlay.error { background: rgba(244,67,54,0.5); opacity: 1; }
+
+button:disabled {
+  pointer-events: none; /* Impede cliques */
+  opacity: 0.5; /* Reduz a opacidade para indicar que está desativado */
+  cursor: not-allowed; /* Mostra um cursor de "não permitido" */
+}

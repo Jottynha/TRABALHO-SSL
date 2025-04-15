@@ -78,4 +78,66 @@ export function desenharOnda(tipo) {
   
     ctx.stroke();
   }
+
+  export function drawUnitStep(ctx, displacement) {
+    // Limpar o canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+    // Configurar o estilo do gráfico
+    ctx.strokeStyle = 'blue';
+    ctx.lineWidth = 2;
+  
+    // Criar gradiente para o fundo
+    const gradient = ctx.createLinearGradient(0, 0, ctx.canvas.width, ctx.canvas.height);
+    gradient.addColorStop(0, '#e0f7fa'); // Azul claro
+    gradient.addColorStop(1, '#b2ebf2'); // Azul mais escuro
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  
+    ctx.strokeStyle = '#000'; // Preto para os eixos
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(0, ctx.canvas.height / 2); // Eixo X
+    ctx.lineTo(ctx.canvas.width, ctx.canvas.height / 2);
+    ctx.moveTo(ctx.canvas.width / 2, 0); // Eixo Y
+    ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height);
+    ctx.stroke();
+  
+    // Configurar o estilo do degrau
+    ctx.strokeStyle = '#00796b'; // Verde escuro
+    ctx.lineWidth = 3;
+  
+    // Desenhar o degrau unitário deslocado com suavidade
+    const centerX = ctx.canvas.width / 2;
+    const centerY = ctx.canvas.height / 2;
+    const stepPosition = centerX + displacement; // Posição do deslocamento
+  
+    ctx.beginPath();
+    ctx.moveTo(0, centerY); // Linha horizontal antes do degrau
+    ctx.lineTo(stepPosition - 10, centerY); // Suavizar antes do degrau
+    ctx.quadraticCurveTo(stepPosition, centerY, stepPosition, centerY - 10); // Curva suave na subida
+    ctx.lineTo(stepPosition, centerY - 50); // Subida do degrau
+    ctx.quadraticCurveTo(stepPosition, centerY - 60, stepPosition + 10, centerY - 60); // Suavizar após o degrau
+    ctx.lineTo(ctx.canvas.width, centerY - 60); // Linha horizontal após o degrau
+    ctx.stroke();
+  
+    // Adicionar sombra ao degrau
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 5;
+  
+    // Re-desenhar o degrau para aplicar a sombra
+    ctx.beginPath();
+    ctx.moveTo(0, centerY);
+    ctx.lineTo(stepPosition - 10, centerY);
+    ctx.quadraticCurveTo(stepPosition, centerY, stepPosition, centerY - 10);
+    ctx.lineTo(stepPosition, centerY - 50);
+    ctx.quadraticCurveTo(stepPosition, centerY - 60, stepPosition + 10, centerY - 60);
+    ctx.lineTo(ctx.canvas.width, centerY - 60);
+    ctx.stroke();
+  
+    // Remover sombra para futuros desenhos
+    ctx.shadowColor = 'transparent';
+  }
   

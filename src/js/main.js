@@ -16,13 +16,10 @@ export function returnToWelcome() {
     DOM.vidasEl.style.display = 'none';
     // Define explicitamente o display do welcome screen para 'flex', conforme o CSS original
     DOM.welcomeScreen.style.display = 'flex';
-    
-    // Garante que outras telas estejam ocultas e que a barra de progresso seja escondida
     DOM.menuScreen.style.display = 'none';
     DOM.gameScreen.style.display = 'none';
     document.querySelector('.progress-container').style.display = 'none';
     
-    // (Opcional) Se houver algum outro elemento que precise ser resetado, faça-o aqui.
   }
   
   
@@ -31,6 +28,7 @@ function startLesson(lessonNumber) {
   state.currentLesson = lessonNumber;
   DOM.menuScreen.style.display = 'none';
   DOM.gameScreen.style.display = 'block';
+  document.querySelector('.progress-container').style.display = 'block';
   DOM.resultText.textContent = '';
   DOM.infoText.textContent = 'Acerte para ver detalhes aqui.';
   initAudio();
@@ -44,7 +42,7 @@ function initUI() {
     state.isInfinityMode = false;
     DOM.welcomeScreen.style.display = 'none';
     DOM.menuScreen.style.display = 'block';
-    document.querySelector('.progress-container').style.display = 'block';
+    document.querySelector('.progress-container').style.display = 'none';
   });
 
   DOM.btnInfinityMode.addEventListener('click', () => {
@@ -72,6 +70,7 @@ function initUI() {
   document.getElementById('lesson-btn-4').addEventListener('click', () => startLesson(4));
   document.getElementById('lesson-btn-5').addEventListener('click', () => startLesson(5));
   document.getElementById('lesson-btn-6').addEventListener('click', () => startLesson(6));
+  document.getElementById('lesson-btn-7').addEventListener('click', () => startLesson(7));
   // Botão para voltar ao menu
   DOM.btnVoltarMenu.addEventListener('click', returnToWelcome);
 

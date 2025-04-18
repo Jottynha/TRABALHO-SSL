@@ -262,11 +262,58 @@ export function drawAmplitudeChange(ctx, amplitudeFactor) {
     }
   }
   ctx.stroke();
-  
-  // Opcional: Adicionar uma legenda para identificar os sinais
   ctx.font = '10px Poppins, sans-serif';
   ctx.fillStyle = 'blue';
   ctx.fillText('Sinal Original', 10, 10);
   ctx.fillStyle = 'red';
   ctx.fillText('Sinal com Amplitude Alterada', 10, 30);
+}
+
+export function generateRandomWave(ctx) {
+  const centerY = ctx.canvas.height / 2;
+  const amplitude = Math.random() * 60 + 20;    // 20–80
+  const frequency = Math.random() * 0.08 + 0.02; // 0.02–0.10
+  const phase = Math.random() * Math.PI * 2;
+  const wave = [];
+  for (let x = 0; x < ctx.canvas.width; x++) {
+    wave.push(centerY + amplitude * Math.sin(frequency * (x - ctx.canvas.width/2) + phase));
+  }
+  return wave;
+}
+
+export function drawWave(ctx, wave, color, lineWidth = 2) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = lineWidth;
+  ctx.beginPath();
+  wave.forEach((y, x) => x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
+  ctx.stroke();
+}
+
+export function drawCombinedWave(ctx, wave1, wave2, operation) {
+  const centerY = ctx.canvas.height / 2;
+  const result = wave1.map((y1, x) => {
+    const y2 = wave2[x];
+    // traz de volta ao mesmo eixo
+    return operation === 'Soma'
+      ? y1 + (y2 - centerY)
+      : y1 - (y2 - centerY);
+  });
+  drawWave(ctx, result, 'red', 3);
+}
+
+export function drawAxes(ctx) {
+  const cw = ctx.canvas.width;
+  const ch = ctx.canvas.height;
+  const cx = cw / 2;
+  const cy = ch / 2;
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  // Eixo X
+  ctx.moveTo(0, cy);
+  ctx.lineTo(cw, cy);
+  // Eixo Y
+  ctx.moveTo(cx, 0);
+  ctx.lineTo(cx, ch);
+  ctx.stroke();
 }

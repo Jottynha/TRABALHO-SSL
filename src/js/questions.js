@@ -1,7 +1,7 @@
 // js/questions.js
 import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup, unlockLesson } from './ui.js';
 import { playFeedbackSound } from './audio.js';
-import { desenharOnda, drawScaledSignal, drawUnitStep, drawAmplitudeChange } from './drawing.js';
+import { desenharOnda, drawScaledSignal, drawUnitStep, drawAmplitudeChange, generateRandomWave,drawWave, drawCombinedWave,drawAxes } from './drawing.js';
 import { returnToWelcome } from './main.js';
 import { updateHighScore } from './ui.js';
 
@@ -12,7 +12,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0},
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0},
   threshold: 50,
   highScore: 0
 };
@@ -31,7 +31,9 @@ export const audioTypes = {
   'Compressão': 'compress',
   'Expansão': 'expand',
   'Amplitude Aumentada': 'ampup',
-  'Amplitude Reduzida': 'ampdown'
+  'Amplitude Reduzida': 'ampdown',
+  'Soma': 'sum',
+  'Subtração': 'subtract',
 };
 
 export const infoContent = {
@@ -90,6 +92,14 @@ export const infoContent = {
   ampdown: {
     text: 'Amplitude Reduzida: o sinal apresenta menor variação em torno do zero.',
     extra: 'Isso pode representar uma redução de volume ou intensidade no sinal.'
+  },
+  sum:{
+    text: 'Soma de Sinais: combinação ponto a ponto das amplitudes.',
+    extra: 'Representa a adição dos valores instantâneos de cada sinal, podendo reforçar ou atenuar trechos.'
+  },
+  subtract: {
+    text: 'Subtração de Sinais: diferença ponto a ponto das amplitudes.',
+    extra: 'Representa a subtração dos valores instantâneos de cada sinal, útil para análises de interferência e cancelamento.'
   }
 };
 
@@ -108,9 +118,10 @@ export function setupQuestion() {
       3: ['Modulação AM', 'Modulação FM'],
       4: ['u(t + t0)', 'u(t - t0)'],
       5: ['Compressão', 'Expansão'],
-      6: ['Amplitude Aumentada', 'Amplitude Reduzida']
+      6: ['Amplitude Aumentada', 'Amplitude Reduzida'],
+      7: ['Soma', 'Subtração']
     };
-    const randomLesson = Math.floor(Math.random() * 6) + 1;
+    const randomLesson = Math.floor(Math.random() * 7) + 1;
     state.currentLesson = randomLesson;
     opts = allOptions[randomLesson];    
 
@@ -139,6 +150,10 @@ export function setupQuestion() {
     if (state.currentLesson === 6) {
       opts = ['Amplitude Aumentada', 'Amplitude Reduzida'];
       questionTextElement.textContent = 'Como foi alterada a amplitude do sinal?';
+    }
+    if (state.currentLesson === 7) {
+      opts = ['Soma', 'Subtração'];
+      questionTextElement.textContent = 'Você deve somar ou subtrair estes sinais?';
     }
   }
 
@@ -169,14 +184,28 @@ export function setupQuestion() {
     drawAmplitudeChange(ctx, amplitudeFactor);
     state.currentAnswer = isAmplified ? 'Amplitude Aumentada' : 'Amplitude Reduzida';
     canvas_result.style.display = 'none';
-  }
-  else {
+  } else if (state.currentLesson === 7) {
+    playSoundButton.disabled = true;
+    canvas.style.display = 'block';
+    canvas_result.style.display = 'none'; 
+    const wave1 = generateRandomWave(ctx);
+    const wave2 = generateRandomWave(ctx);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawAxes(ctx);           
+    drawWave(ctx, wave1, 'blue');
+    drawWave(ctx, wave2, 'green');
+    const operation = Math.random() < 0.5 ? 'Soma' : 'Subtração'; 
+    state.currentAnswer = operation;
+    state._wave1 = wave1;
+    state._wave2 = wave2;
+    drawCombinedWave(ctx, wave1, wave2, operation);
+  } else {
     canvas.style.display = 'none';
     playSoundButton.disabled = false;
   }
 
   opts.sort(() => Math.random() - 0.5);
-  if (![4, 5, 6].includes(state.currentLesson)) {
+  if (![4, 5, 6, 7].includes(state.currentLesson)) {
     state.currentAnswer = opts[Math.floor(Math.random() * opts.length)];
   }
   opts.forEach((opt) => {
@@ -228,7 +257,7 @@ export function checkAnswer(selected) {
     DOM.resultText.style.color = 'var(--primary-green)';
   } else {
     showOverlay('error');
-    if (state.currentLesson === 4 || state.currentLesson === 5) {
+    if (state.currentLesson === 4 || state.currentLesson === 5 || state.currentLesson === 6) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
     if (state.isInfinityMode) {

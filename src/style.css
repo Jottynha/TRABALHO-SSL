@@ -67,6 +67,15 @@ body.dark-mode #highscore-card {
   background: var(--card-dark);
 }
 
+body.dark-mode #completed-lessons-card {
+  background: var(--card-dark);
+}
+
+body.dark-mode #btn-info {
+  background: var(--card-dark);
+}
+
+
 /* Estilização para o título do card */
 #highscore-card h2 {
   color: var(--primary-green);

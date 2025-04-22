@@ -287,6 +287,14 @@ export function drawWave(ctx, wave, color, lineWidth = 2) {
   ctx.beginPath();
   wave.forEach((y, x) => x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y));
   ctx.stroke();
+  ctx.stroke();
+  ctx.font = '10px Poppins, sans-serif';
+  ctx.fillStyle = 'blue';
+  ctx.fillText('Sinal 1', 130, 10);
+  ctx.fillStyle = 'green';
+  ctx.fillText('Sinal 2', 130, 20);
+  ctx.fillStyle = 'red';
+  ctx.fillText('Sinal Resultante', 130, 30);
 }
 
 export function drawCombinedWave(ctx, wave1, wave2, operation) {

@@ -16,7 +16,7 @@ export function returnToWelcome() {
     DOM.vidasEl.style.display = 'none';
     // Define explicitamente o display do welcome screen para 'flex', conforme o CSS original
     DOM.welcomeScreen.style.display = 'flex';
-    DOM.menuScreen.style.display = 'none';
+    DOM.menuScreen.style.display = 'block';
     DOM.gameScreen.style.display = 'none';
     document.querySelector('.progress-container').style.display = 'none';
     
@@ -37,6 +37,8 @@ function startLesson(lessonNumber) {
 
 // Inicializa os eventos da interface
 function initUI() {
+  document.getElementById('wave-canvas').style.display = 'none';
+  document.getElementById('game-screen').style.display = 'none';
   // Botões de modos
   DOM.btnLessonMode.addEventListener('click', () => {
     state.isInfinityMode = false;
@@ -81,6 +83,21 @@ function initUI() {
 
   // Botão de alternar modo escuro
   DOM.toggleDark.addEventListener('click', toggleDarkMode);
+
+  const infoButton = document.getElementById('btn-info');
+  const modal = document.getElementById('info-modal');
+  const closeModal = document.getElementById('close-modal');
+  infoButton.addEventListener('click', () => {
+    modal.style.display = 'block';
+  });
+  closeModal.addEventListener('click', () => {
+    modal.style.display = 'none';
+  });
+  window.addEventListener('click', (event) => {
+    if (event.target === modal) {
+      modal.style.display = 'none';
+    }
+  });
 }
 
 initUI();

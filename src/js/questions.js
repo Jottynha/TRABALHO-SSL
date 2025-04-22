@@ -17,6 +17,23 @@ export const state = {
   highScore: 0
 };
 
+export const lessonTips = {
+  1: "As ondas senoidais, quadradas e dente de serra diferem em forma, conteúdo harmônico e resposta auditiva. Escute cada uma com atenção: as senoidais possuem apenas a frequência fundamental, enquanto as quadradas e dente de serra incluem múltiplos harmônicos, alterando significativamente o timbre percebido.",
+  
+  2: "Filtros selecionam faixas de frequência específicas de um sinal. Os passa-baixa atenuam altas frequências, os passa-alta eliminam baixas, e os passa-banda isolam uma faixa intermediária. Escute como cada filtro muda o conteúdo sonoro, realçando ou suavizando certas características do som original.",
+
+  3: "Modular um sinal é alterar parâmetros como amplitude (AM) ou frequência (FM) de uma portadora para transmitir informações. Perceba como a modulação AM preserva a forma do áudio original, enquanto a FM varia a frequência da portadora de maneira mais suave, influenciando a fidelidade e a resistência ao ruído.",
+
+  4: "Deslocar um sinal no tempo equivale a atrasá-lo ou adiantá-lo sem alterar sua forma. Visualmente, isso move o gráfico horizontalmente. Isso é útil para alinhar sinais ou ajustar fases em sistemas de comunicação e controle.",
+
+  5: "Compressão e expansão temporal modificam a duração do sinal: a compressão o torna mais curto (estica no eixo da frequência), e a expansão o alarga (comprime na frequência). Use gráficos para visualizar como essas transformações afetam a densidade de informação e a percepção do sinal.",
+
+  6: "A amplitude está relacionada à intensidade ou energia do sinal. Aumentá-la torna o sinal mais forte, enquanto reduzi-la o enfraquece. No gráfico, veja como o pico das ondas cresce ou diminui, impactando a potência do sinal e sua capacidade de ser detectado em meio ao ruído.",
+
+  7: "A combinação de sinais pode gerar interferência construtiva (reforço) ou destrutiva (cancelamento). Analise graficamente como dois sinais somados podem formar novos padrões, e explore o conceito de cancelamento de ruído por superposição inversa (antifase)."
+};
+
+
 export const audioTypes = {
   'Onda senoidal': 'sine',
   'Onda quadrada': 'square',

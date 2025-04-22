@@ -1,6 +1,6 @@
 import { initAudio, playSoundForLesson } from './audio.js';
 import { toggleDarkMode, DOM } from './ui.js';
-import { setupQuestion, state, audioTypes } from './questions.js';
+import { setupQuestion, state, audioTypes,lessonTips } from './questions.js';
 
 export function returnToWelcome() {
     // Reseta o estado
@@ -25,6 +25,7 @@ export function returnToWelcome() {
   
 // Função para iniciar uma lição específica
 function startLesson(lessonNumber) {
+  updateTipsContent(lessonNumber)
   state.currentLesson = lessonNumber;
   DOM.menuScreen.style.display = 'none';
   DOM.gameScreen.style.display = 'block';
@@ -33,6 +34,15 @@ function startLesson(lessonNumber) {
   DOM.infoText.textContent = 'Acerte para ver detalhes aqui.';
   initAudio();
   setupQuestion();
+}
+
+function updateTipsContent(lesson) {
+  const tipsContent = document.getElementById('tips-content');
+  if (lessonTips[lesson]) {
+    tipsContent.textContent = lessonTips[lesson];
+  } else {
+    tipsContent.textContent = "Nenhuma dica disponível para esta lição.";
+  }
 }
 
 // Inicializa os eventos da interface
@@ -98,6 +108,7 @@ function initUI() {
       modal.style.display = 'none';
     }
   });
+  
 }
 
 initUI();

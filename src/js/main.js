@@ -1,6 +1,131 @@
 import { initAudio, playSoundForLesson } from './audio.js';
-import { toggleDarkMode, DOM } from './ui.js';
-import { setupQuestion, state, audioTypes,lessonTips } from './questions.js';
+import { toggleDarkMode, DOM, updateHighScore, unlockLesson } from './ui.js';
+import { setupQuestion, state, audioTypes,lessonTips, updateCompletedLessons } from './questions.js';
+
+
+const LS_USERS_KEY = 'ssl_users';
+function loadUsers() {
+  return JSON.parse(localStorage.getItem(LS_USERS_KEY) || '{}');
+}
+function saveUsers(users) {
+  localStorage.setItem(LS_USERS_KEY, JSON.stringify(users));
+}
+
+let isLoginMode = true;
+let currentUser = null;
+
+// Elementos de Auth (certifique-se de tê-los no HTML)
+const authScreen     = document.getElementById('auth-screen');
+const authTitle      = document.getElementById('auth-title');
+const authUsername   = document.getElementById('auth-username');
+const authPassword   = document.getElementById('auth-password');
+const btnAuthAction  = document.getElementById('btn-auth-action');
+const toggleAuth     = document.getElementById('toggle-auth');
+const authError      = document.getElementById('auth-error');
+
+// Mostra tela de login/cadastro
+function showAuth() {
+  authScreen.style.display      = 'block';
+  DOM.welcomeScreen.style.display  = 'none';
+  DOM.menuScreen.style.display     = 'none';
+  DOM.gameScreen.style.display     = 'none';
+  DOM.infoCard.style.display       = 'none';
+  DOM.highscoreCard.style.display  = 'none';
+  DOM.completedLessonsCard.style.display = 'none';
+  DOM.tips.style.display          = 'none';
+  document.querySelector('.progress-container').style.display = 'none';
+}
+
+// Mostra tela inicial do jogo
+function showWelcome() {
+  const saved = JSON.parse(localStorage.getItem('ssl_state'));
+  if (saved) {
+    console.log(saved); 
+    Object.assign(state, saved);
+    updateHighScore(state.highScore);
+    updateCompletedLessons();
+    for (const lesson of state.lessonsCompleted) {
+      unlockLesson(lesson+1);
+    }
+  } 
+
+  authScreen.style.display      = 'none';
+  DOM.welcomeScreen.style.display  = 'flex';
+  DOM.menuScreen.style.display     = 'block';
+  DOM.gameScreen.style.display     = 'none';
+  DOM.infoCard.style.display       = 'block';
+  DOM.highscoreCard.style.display  = 'block';
+  DOM.completedLessonsCard.style.display = 'block';
+  DOM.tips.style.display          = 'block';
+  document.querySelector('.progress-container').style.display = 'none';
+}
+
+// Alterna entre modo Login e Cadastro
+toggleAuth.addEventListener('click', () => {
+  isLoginMode = !isLoginMode;
+  authTitle.textContent      = isLoginMode ? 'Login' : 'Criar conta';
+  btnAuthAction.textContent  = isLoginMode ? 'Entrar' : 'Cadastrar';
+  toggleAuth.textContent     = isLoginMode ? 'Criar conta' : 'Já tenho conta';
+  authError.style.display    = 'none';
+});
+
+// Ação de Login/Cadastro
+btnAuthAction.addEventListener('click', () => {
+  const users = loadUsers();
+  const u = authUsername.value.trim();
+  const p = authPassword.value;
+
+  if (!u || !p) {
+    authError.textContent = 'Preencha usuário e senha';
+    authError.style.display = 'block';
+    return;
+  }
+
+  if (isLoginMode) {
+    // LOGIN
+    if (!users[u] || users[u].password !== p) {
+      authError.textContent = 'Usuário ou senha inválidos';
+      authError.style.display = 'block';
+      return;
+    }
+    // Restaura estado
+    Object.assign(state, users[u].state || {});
+  } else {
+    // CADASTRO
+    if (users[u]) {
+      authError.textContent = 'Usuário já existe';
+      authError.style.display = 'block';
+      return;
+    }
+    users[u] = { password: p, state: { ...state } };
+    saveUsers(users);
+  }
+
+  currentUser = u;
+  showWelcome();
+});
+
+// Salva state ao fechar / recarregar
+window.addEventListener('beforeunload', () => {
+  if (currentUser) {
+    const users = loadUsers();
+    users[currentUser].state = { ...state };
+    saveUsers(users);
+  }
+});
+
+// Inicializa na abertura
+showAuth();
+
+export function saveState() {
+  localStorage.setItem('ssl_state', JSON.stringify(state));
+  if (currentUser) {
+    const users = loadUsers();
+    users[currentUser].state = { ...state };
+    console.log(state) ;
+    saveUsers(users);
+  }
+}
 
 export function returnToWelcome() {
     // Reseta o estado
@@ -112,3 +237,8 @@ function initUI() {
 }
 
 initUI();
+
+const saved = JSON.parse(localStorage.getItem('ssl_state'));
+if (saved) {
+  Object.assign(state, saved);
+}

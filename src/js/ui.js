@@ -15,7 +15,14 @@ export const DOM = {
     infoText: document.getElementById('info-text'),
     infoExtra: document.getElementById('info-extra'),
     optionsContainer: document.getElementById('options-container'),
-    overlay: document.getElementById('overlay')
+    overlay: document.getElementById('overlay'),
+    infoCard: document.getElementById('info-card'),
+    highscoreCard: document.getElementById('highscore-card'),
+    completedLessonsCard: document.getElementById('completed-lessons-card'),
+    tips: document.getElementById('tips'),
+    tipsContent: document.getElementById('tips-content'),
+    completedLessonsContent: document.getElementById('completed-lessons-content'),
+
   };
   
   export function updateHighScore(highScore) {

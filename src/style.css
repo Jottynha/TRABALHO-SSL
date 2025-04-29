@@ -6,6 +6,15 @@ html, body {
   overflow-x: scroll;
 }
 
+/* Esconde jogo até logar */
+#welcome-screen, .flex-container, #score-container {
+  display: none;
+}
+/* Mostra auth-screen inicialmente */
+#auth-screen {
+  display: block;
+}
+
 #welcome-screen {
   display: flex;
   flex-direction: column;

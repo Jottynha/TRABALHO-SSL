@@ -9,6 +9,18 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
+    <div id="auth-screen" class="card" style="padding: 20px; max-width: 300px; margin: 40px auto;">
+      <h2 id="auth-title">Login</h2>
+      <div id="auth-form">
+        <input type="text" id="auth-username" placeholder="Usuário" class="btn" style="width:100%;margin-bottom:8px;"/>
+        <input type="password" id="auth-password" placeholder="Senha" class="btn" style="width:100%;margin-bottom:8px;"/>
+        <button id="btn-auth-action" class="btn" style="width:100%;">Entrar</button>
+      </div>
+      <p style="text-align:center; margin-top:12px;">
+        <span id="toggle-auth">Criar conta</span>
+      </p>
+      <p id="auth-error" style="color:#e74c3c; text-align:center; display:none;"></p>
+    </div>
     <div id="welcome-screen">
       <h1>Bem-vindo ao Jogo de Sinais</h1>
       <p>

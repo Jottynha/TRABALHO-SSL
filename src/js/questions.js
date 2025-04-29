@@ -2,8 +2,9 @@
 import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup, unlockLesson } from './ui.js';
 import { playFeedbackSound } from './audio.js';
 import { desenharOnda, drawScaledSignal, drawUnitStep, drawAmplitudeChange, generateRandomWave,drawWave, drawCombinedWave,drawAxes } from './drawing.js';
-import { returnToWelcome } from './main.js';
+import { returnToWelcome,saveState } from './main.js';
 import { updateHighScore } from './ui.js';
+
 
 
 export const state = {
@@ -14,7 +15,8 @@ export const state = {
   isInfinityMode: false,
   lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0},
   threshold: 50,
-  highScore: 0
+  highScore: 0,
+  lessonsCompleted: []
 };
 
 export const lessonTips = {
@@ -265,6 +267,7 @@ export function checkAnswer(selected) {
     showOverlay('success');
     state.lessonScores[state.currentLesson] += 10;
     state.score += 10;
+    saveState();
     // Atualiza as informações
     const key = audioTypes[state.currentAnswer];
     DOM.infoText.textContent = infoContent[key].text;
@@ -281,6 +284,7 @@ export function checkAnswer(selected) {
       state.lives--;
       const hearts = '❤️'.repeat(state.lives) + '🤍'.repeat(3 - state.lives);
       DOM.vidasEl.textContent = hearts;
+      saveState();
       if (state.lives <= 0) {
         Swal.fire({
           title: 'Fim de Jogo!',
@@ -309,12 +313,15 @@ export function checkAnswer(selected) {
   updateProgress(state.lessonScores[state.currentLesson], state.threshold);
   if (state.lessonScores[state.currentLesson] >= state.threshold) {
     unlockLesson(state.currentLesson + 1);
+    state.lessonsCompleted.push(state.currentLesson);
     showLessonCompletePopup(state.currentLesson);
     updateCompletedLessons();
+    saveState();
   }
   if (state.score > state.highScore) {
     state.highScore = state.score;
     updateHighScore(state.highScore);  // Atualiza o DOM com a maior pontuação
+    saveState();
   }
 
   setTimeout(setupQuestion, 1200);

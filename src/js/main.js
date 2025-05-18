@@ -242,3 +242,22 @@ const saved = JSON.parse(localStorage.getItem('ssl_state'));
 if (saved) {
   Object.assign(state, saved);
 }
+const tooltip = document.getElementById('tooltip');
+
+document.querySelectorAll('.btn-option').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const difficulty = btn.getAttribute('data-difficulty');
+    if (!difficulty) {
+      tooltip.style.display = 'none';
+      return;
+    }
+    tooltip.style.display = 'block';
+    tooltip.textContent = 'Nível: ' + difficulty;
+    tooltip.style.left = e.pageX + 10 + 'px';
+    tooltip.style.top = e.pageY + 10 + 'px';
+  });
+  
+  btn.addEventListener('mouseleave', () => {
+    tooltip.style.display = 'none';
+  });
+});

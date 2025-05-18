@@ -42,17 +42,18 @@
       <div class="card" id="menu-screen">
         <h1>Ritmo dos Sinais</h1>
         <p>Escolha uma lição:</p>
-        <button id="lesson-btn-1" class="btn btn-option">Lição 1: Tipos de Onda</button>
-        <button id="lesson-btn-2" class="btn btn-option" disabled>Lição 2: Filtros</button>
-        <button id="lesson-btn-3" class="btn btn-option" disabled>Lição 3: Modulação</button>
-        <button id="lesson-btn-4" class="btn btn-option" disabled>Lição 4: Deslocamento de Sinais</button>
-        <button id="lesson-btn-5" class="btn btn-option" disabled>Lição 5: Compressão e Expansão de Sinais</button>
-        <button id="lesson-btn-6" class="btn btn-option" disabled>Lição 6: Mudança de Amplitude de um Sinal</button>
-        <button id="lesson-btn-7" class="btn btn-option" >Lição 7: Soma e Subtração de Sinais</button>
+        <button id="lesson-btn-1" class="btn btn-option" data-difficulty="Médio">Lição 1: Tipos de Onda</button>
+        <button id="lesson-btn-2" class="btn btn-option" disabled data-difficulty="Médio">Lição 2: Filtros</button>
+        <button id="lesson-btn-3" class="btn btn-option" disabled data-difficulty="Fácil">Lição 3: Modulação</button>
+        <button id="lesson-btn-4" class="btn btn-option" disabled data-difficulty="Fácil">Lição 4: Deslocamento de Sinais</button>
+        <button id="lesson-btn-5" class="btn btn-option" disabled data-difficulty="Difícil">Lição 5: Compressão e Expansão de Sinais</button>
+        <button id="lesson-btn-6" class="btn btn-option" disabled data-difficulty="Difícil">Lição 6: Mudança de Amplitude de um Sinal</button>
+        <button id="lesson-btn-7" class="btn btn-option" disabled data-difficulty="Difícil">Lição 7: Soma e Subtração de Sinais</button>
       </div>
       <div class="card" id="game-screen">
         <h1 id="lesson-title">Lição</h1>
         <p id="question-text">Aqui será exibida a pergunta.</p> 
+        <p id="lesson-difficulty" class="lesson-difficulty"></p>
         <button class="btn btn-primary" id="btn-play-sound" disabled>🔊 Ouvir Som</button>
         <canvas id="wave-canvas-game" width="260" height="180" style="border-radius: 8px;" disabled></canvas>
         <div id="options-container"></div>
@@ -107,11 +108,13 @@
       </div>
       </div>
     
-
+      
     <div class="progress-container">
       <div id="progress-bar"></div>
     </div>
     <div id="overlay" class="overlay"></div>
+    <div id="tooltip" style="position:absolute; padding:6px 10px; background:#333; color:#fff; border-radius:4px; font-size:14px; display:none; pointer-events:none; z-index:1000;"></div>
+
     <script type="module" src="js/main.js"></script>
   </body>
 </html>

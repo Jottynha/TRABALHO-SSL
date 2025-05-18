@@ -6,6 +6,15 @@ import { returnToWelcome,saveState } from './main.js';
 import { updateHighScore } from './ui.js';
 
 
+export const lessonDifficulty = {
+  1: 'Médio',
+  2: 'Médio',
+  3: 'Fácil',
+  4: 'Fácil',
+  5: 'Difícil',
+  6: 'Difícil',
+  7: 'Difícil'
+};
 
 export const state = {
   currentLesson: 0,
@@ -142,9 +151,14 @@ export function setupQuestion() {
     };
     const randomLesson = Math.floor(Math.random() * 7) + 1;
     state.currentLesson = randomLesson;
-    opts = allOptions[randomLesson];    
+    const difficultyText = document.getElementById('lesson-difficulty');
+    difficultyText.textContent = `Nível: ${lessonDifficulty[state.currentLesson]}`;
+    opts = allOptions[randomLesson];   
+     
 
   } else {
+    const difficultyText = document.getElementById('lesson-difficulty');
+    difficultyText.textContent = `Nível: ${lessonDifficulty[state.currentLesson]}`;
     const questionTextElement = document.getElementById('question-text'); // Elemento para exibir a pergunta
     if (state.currentLesson === 1) {
       opts = ['Onda senoidal', 'Onda quadrada', 'Onda dente de serra'];

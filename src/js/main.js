@@ -207,6 +207,7 @@ function initUI() {
   document.getElementById('lesson-btn-6').addEventListener('click', () => startLesson(6));
   document.getElementById('lesson-btn-7').addEventListener('click', () => startLesson(7));
   document.getElementById('lesson-btn-8').addEventListener('click', () => startLesson(8));
+  document.getElementById('lesson-btn-9').addEventListener('click', () => startLesson(9));
   // Botão para voltar ao menu
   DOM.btnVoltarMenu.addEventListener('click', returnToWelcome);
 
@@ -258,5 +259,44 @@ document.querySelectorAll('.btn-option').forEach(btn => {
   
   btn.addEventListener('mouseleave', () => {
     tooltip.style.display = 'none';
+  });
+});
+
+document.getElementById('btn-settings').addEventListener('click', () => {
+  document.getElementById('settings-modal').style.display = 'block';
+});
+
+document.getElementById('close-settings').addEventListener('click', () => {
+  document.getElementById('settings-modal').style.display = 'none';
+});
+
+window.addEventListener('click', (event) => {
+  const modal = document.getElementById('settings-modal');
+  if (event.target === modal) {
+    modal.style.display = 'none';
+  }
+});
+
+document.getElementById('btn-clear-scores').addEventListener('click', () => {
+  Swal.fire({
+    title: 'Tem certeza?',
+    text: "Todos os scores das lições serão apagados!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sim, apagar!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      for (let i = 1; i <= 9; i++) {
+        state.lessonScores[i] = 0;
+      }
+      state.score = 0;
+      state.highScore = 0;
+      state.lessonsCompleted = [];
+      document.getElementById('highscore-value').innerText = '0';
+      document.getElementById('completed-lessons-content').innerHTML = '<p>Nenhuma lição concluída ainda.</p>';
+
+      Swal.fire('Apagado!', 'Os scores foram zerados.', 'success');
+    }
   });
 });

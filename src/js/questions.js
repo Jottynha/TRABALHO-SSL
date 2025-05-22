@@ -14,7 +14,8 @@ export const lessonDifficulty = {
   5: 'Difícil',
   6: 'Difícil',
   7: 'Difícil',
-  8: 'Difícil'
+  8: 'Difícil',
+  9: 'Médio'
 };
 
 export const state = {
@@ -23,7 +24,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0, 8:0},
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0, 8:0, 9:0},
   threshold: 50,
   highScore: 0,
   lessonsCompleted: []
@@ -44,7 +45,9 @@ export const lessonTips = {
 
   7: "A combinação de sinais pode gerar interferência construtiva (reforço) ou destrutiva (cancelamento). Analise graficamente como dois sinais somados podem formar novos padrões, e explore o conceito de cancelamento de ruído por superposição inversa (antifase).",
 
-  8: "A convolução combina dois sinais para produzir um terceiro, refletindo como um sistema responde a um estímulo. Essa operação é essencial em filtragem, reconhecimento de padrões e processamento de imagens e sons. Visualize como a forma de um sinal afeta e molda o outro ao longo do tempo."
+  8: "A convolução combina dois sinais para produzir um terceiro, refletindo como um sistema responde a um estímulo. Essa operação é essencial em filtragem, reconhecimento de padrões e processamento de imagens e sons. Visualize como a forma de um sinal afeta e molda o outro ao longo do tempo.",
+
+  9: "A correlação mede a semelhança entre dois sinais ao longo do tempo. Deslize um sinal sobre o outro e observe o quanto eles coincidem. Quando o alinhamento é perfeito, o valor da correlação é máximo. Isso é útil em reconhecimento de padrões, como identificar sinais repetitivos em um ruído."
 };
 
 
@@ -157,10 +160,16 @@ export function setupQuestion() {
       5: ['Compressão', 'Expansão'],
       6: ['Amplitude Aumentada', 'Amplitude Reduzida'],
       7: ['Soma', 'Subtração'],
-      8: ['Convolução Correta', 'Convolução Incorreta']
+      8: ['Convolução Correta', 'Convolução Incorreta'],
+      9: [
+        "FT de δ(t) é 1",
+        "DTFS frequência fundamental é 2π/N",
+        "DTFT é soma infinita de x[n]e^(-jωn)",
+        "FT de impulso unitário é δ(ω)"
+      ]
     };
 
-    const randomLesson = Math.floor(Math.random() * 8) + 1;
+    const randomLesson = Math.floor(Math.random() * 9) + 1;
     state.currentLesson = randomLesson;
     const difficultyText = document.getElementById('lesson-difficulty');
     difficultyText.textContent = `Nível: ${lessonDifficulty[state.currentLesson]}`;
@@ -209,6 +218,63 @@ export function setupQuestion() {
 
       questionTextElement.innerHTML = 'Esta convolução está correta?<br><br>' + legendHTML;
     }
+    if (state.currentLesson === 9) {
+      const tableQuestions = [
+        {
+          question: "Qual é a Transformada de Fourier (FT) da função impulso δ(t)?",
+          options: ["1", "δ(ω)", "e^(jωt)"],
+          answer: "1",
+          info: {
+            text: "A Transformada de Fourier da função impulso δ(t) é igual a 1.",
+            extra: "Isso ocorre porque δ(t) possui todas as frequências igualmente representadas no domínio da frequência."
+          }
+        },
+        {
+          question: "Qual é a frequência fundamental FS na DTFS para um sinal periódico de período N?",
+          options: ["2π/N", "N/2π", "πN"],
+          answer: "2π/N",
+          info: {
+            text: "A frequência fundamental na DTFS é 2π/N.",
+            extra: "Ela representa o menor incremento de frequência entre harmônicas de um sinal periódico discreto."
+          }
+        },
+        {
+          question: "Qual a forma geral da DTFT de x[n]?",
+          options: [
+            "Soma infinita de x[n]e^(-jωn)", 
+            "Integral de x(t)e^(-jωt)", 
+            "Transformada de Laplace"
+          ],
+          answer: "Soma infinita de x[n]e^(-jωn)",
+          info: {
+            text: "A DTFT é definida como uma soma infinita ponderada por exponenciais complexas.",
+            extra: "A fórmula é: X(ω) = Σ x[n]·e^(-jωn), somando sobre todos os n."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Fourier (FT) do impulso unitário no domínio da frequência?",
+          options: ["1", "δ(ω)", "e^(jωt)"],
+          answer: "δ(ω)",
+          info: {
+            text: "A FT do impulso unitário (no tempo) é δ(ω) no domínio da frequência.",
+            extra: "Ou seja, um impulso no tempo resulta em um espectro constante infinito no domínio da frequência."
+          }
+        }
+      ];
+
+      // Escolher pergunta aleatória dessa lição 9
+      const randomIndex = Math.floor(Math.random() * tableQuestions.length);
+      const q = tableQuestions[randomIndex];
+      questionTextElement.textContent = q.question;
+
+      opts = [...q.options];
+
+      // Guardar a pergunta e resposta para uso posterior
+      state.currentAnswer = q.answer;
+      DOM.infoText.textContent = q.info.text;
+      DOM.infoExtra.textContent = q.info.extra;
+    }
+
   }
 
   
@@ -269,7 +335,9 @@ export function setupQuestion() {
 
   opts.sort(() => Math.random() - 0.5);
   if (![4, 5, 6, 7, 8].includes(state.currentLesson)) {
-    state.currentAnswer = opts[Math.floor(Math.random() * opts.length)];
+    if (state.currentLesson !== 9) {
+      state.currentAnswer = opts[Math.floor(Math.random() * opts.length)];
+    }
   }
   opts.forEach((opt) => {
     const b = document.createElement('button');
@@ -313,10 +381,16 @@ export function checkAnswer(selected) {
     state.score += 10;
     saveState();
     // Atualiza as informações
-    const key = audioTypes[state.currentAnswer];
-    DOM.infoText.textContent = infoContent[key].text;
-    DOM.infoExtra.textContent = infoContent[key].extra;
-    desenharOnda(key);
+    
+    if (state.currentLesson !== 9 && state.currentLesson !== 8) {
+      const key = audioTypes[state.currentAnswer];
+      if (key && infoContent[key]) {
+        DOM.infoText.textContent = infoContent[key].text;
+        DOM.infoExtra.textContent = infoContent[key].extra;
+        desenharOnda(key);
+      }
+    }
+
     DOM.resultText.textContent = '✅ Correto!';
     DOM.resultText.style.color = 'var(--primary-green)';
   } else {

@@ -40,7 +40,6 @@ function showAuth() {
 function showWelcome() {
   const saved = JSON.parse(localStorage.getItem('ssl_state'));
   if (saved) {
-    console.log(saved); 
     Object.assign(state, saved);
     updateHighScore(state.highScore);
     updateCompletedLessons();
@@ -122,7 +121,6 @@ export function saveState() {
   if (currentUser) {
     const users = loadUsers();
     users[currentUser].state = { ...state };
-    console.log(state) ;
     saveUsers(users);
   }
 }
@@ -208,6 +206,7 @@ function initUI() {
   document.getElementById('lesson-btn-5').addEventListener('click', () => startLesson(5));
   document.getElementById('lesson-btn-6').addEventListener('click', () => startLesson(6));
   document.getElementById('lesson-btn-7').addEventListener('click', () => startLesson(7));
+  document.getElementById('lesson-btn-8').addEventListener('click', () => startLesson(8));
   // Botão para voltar ao menu
   DOM.btnVoltarMenu.addEventListener('click', returnToWelcome);
 

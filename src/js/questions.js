@@ -1,7 +1,7 @@
 // js/questions.js
 import { DOM, showOverlay, updateScore, updateProgress, showLessonCompletePopup, unlockLesson } from './ui.js';
 import { playFeedbackSound } from './audio.js';
-import { desenharOnda, drawScaledSignal, drawUnitStep, drawAmplitudeChange, generateRandomWave,drawWave, drawCombinedWave,drawAxes } from './drawing.js';
+import { desenharOnda, drawScaledSignal, drawUnitStep, drawAmplitudeChange, generateRandomWave,drawWave, drawCombinedWave,drawAxes, drawConvolution } from './drawing.js';
 import { returnToWelcome,saveState } from './main.js';
 import { updateHighScore } from './ui.js';
 
@@ -13,7 +13,8 @@ export const lessonDifficulty = {
   4: 'Fácil',
   5: 'Difícil',
   6: 'Difícil',
-  7: 'Difícil'
+  7: 'Difícil',
+  8: 'Difícil'
 };
 
 export const state = {
@@ -22,7 +23,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0},
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0, 8:0},
   threshold: 50,
   highScore: 0,
   lessonsCompleted: []
@@ -41,7 +42,9 @@ export const lessonTips = {
 
   6: "A amplitude está relacionada à intensidade ou energia do sinal. Aumentá-la torna o sinal mais forte, enquanto reduzi-la o enfraquece. No gráfico, veja como o pico das ondas cresce ou diminui, impactando a potência do sinal e sua capacidade de ser detectado em meio ao ruído.",
 
-  7: "A combinação de sinais pode gerar interferência construtiva (reforço) ou destrutiva (cancelamento). Analise graficamente como dois sinais somados podem formar novos padrões, e explore o conceito de cancelamento de ruído por superposição inversa (antifase)."
+  7: "A combinação de sinais pode gerar interferência construtiva (reforço) ou destrutiva (cancelamento). Analise graficamente como dois sinais somados podem formar novos padrões, e explore o conceito de cancelamento de ruído por superposição inversa (antifase).",
+
+  8: "A convolução combina dois sinais para produzir um terceiro, refletindo como um sistema responde a um estímulo. Essa operação é essencial em filtragem, reconhecimento de padrões e processamento de imagens e sons. Visualize como a forma de um sinal afeta e molda o outro ao longo do tempo."
 };
 
 
@@ -62,6 +65,8 @@ export const audioTypes = {
   'Amplitude Reduzida': 'ampdown',
   'Soma': 'sum',
   'Subtração': 'subtract',
+  'Convolução Correta': 'convolution',
+  'Convolução Incorreta': 'convolution'
 };
 
 export const infoContent = {
@@ -128,6 +133,10 @@ export const infoContent = {
   subtract: {
     text: 'Subtração de Sinais: diferença ponto a ponto das amplitudes.',
     extra: 'Representa a subtração dos valores instantâneos de cada sinal, útil para análises de interferência e cancelamento.'
+  },
+  convolution: {
+    text: 'Convolução: combinação de dois sinais para formar um novo.',
+    extra: 'Usada para modelar a resposta de sistemas lineares a estímulos e é essencial em filtragem de sinais e reconhecimento de padrões.'
   }
 };
 
@@ -147,9 +156,11 @@ export function setupQuestion() {
       4: ['u(t + t0)', 'u(t - t0)'],
       5: ['Compressão', 'Expansão'],
       6: ['Amplitude Aumentada', 'Amplitude Reduzida'],
-      7: ['Soma', 'Subtração']
+      7: ['Soma', 'Subtração'],
+      8: ['Convolução Correta', 'Convolução Incorreta']
     };
-    const randomLesson = Math.floor(Math.random() * 7) + 1;
+
+    const randomLesson = Math.floor(Math.random() * 8) + 1;
     state.currentLesson = randomLesson;
     const difficultyText = document.getElementById('lesson-difficulty');
     difficultyText.textContent = `Nível: ${lessonDifficulty[state.currentLesson]}`;
@@ -187,6 +198,16 @@ export function setupQuestion() {
     if (state.currentLesson === 7) {
       opts = ['Soma', 'Subtração'];
       questionTextElement.textContent = 'Você deve somar ou subtrair estes sinais?';
+    }
+    if (state.currentLesson === 8) {
+      opts = ['Convolução Correta', 'Convolução Incorreta'];
+      const legendHTML = 
+        'Legenda:<br><br>' +
+        'f(t): retângulo (azul)<br>' +
+        'h(t): exponencial (laranja)<br>' +
+        'f * h(t): convolução (vermelho)<br>';
+
+      questionTextElement.innerHTML = 'Esta convolução está correta?<br><br>' + legendHTML;
     }
   }
 
@@ -232,13 +253,22 @@ export function setupQuestion() {
     state._wave1 = wave1;
     state._wave2 = wave2;
     drawCombinedWave(ctx, wave1, wave2, operation);
+  } else if (state.currentLesson === 8) {
+      playSoundButton.disabled = true;
+      canvas.style.display = 'block';
+      canvas_result.style.display = 'none';
+
+      // Suponha que você tenha duas formas de desenhar convoluções (uma correta, outra incorreta)
+      const isCorrect = Math.random() < 0.5;
+      drawConvolution(ctx, isCorrect); 
+      state.currentAnswer = isCorrect ? 'Convolução Correta' : 'Convolução Incorreta';
   } else {
     canvas.style.display = 'none';
     playSoundButton.disabled = false;
   }
 
   opts.sort(() => Math.random() - 0.5);
-  if (![4, 5, 6, 7].includes(state.currentLesson)) {
+  if (![4, 5, 6, 7, 8].includes(state.currentLesson)) {
     state.currentAnswer = opts[Math.floor(Math.random() * opts.length)];
   }
   opts.forEach((opt) => {

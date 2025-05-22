@@ -325,3 +325,65 @@ export function drawAxes(ctx) {
   ctx.lineTo(cx, ch);
   ctx.stroke();
 }
+
+export function drawConvolution(ctx, isCorrect) {
+  ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  drawAxes(ctx);
+
+  const x = [...Array(100).keys()];
+
+  // Sinais aleatórios
+  const rectStart = Math.floor(Math.random() * 40) + 10;
+  const rectWidth = Math.floor(Math.random() * 20) + 10;
+  const decayRate = 0.05 + Math.random() * 0.1;
+
+  const f = x.map(i => (i >= rectStart && i < rectStart + rectWidth) ? 1 : 0);
+  const h = x.map(i => Math.exp(-decayRate * i));
+
+  // Gráfico deslocado para a direita
+  const xOffset = 50;
+
+  // Desenhar sinais originais
+  drawSignal(ctx, h, 'orange', 0, xOffset);  // h(t)
+  drawSignal(ctx, f, 'blue', 1.5, xOffset);   // f(t)
+
+  if (isCorrect) {
+    const conv = convolve(f, h);
+    drawSignal(ctx, conv, 'red', -1.5, xOffset); // resultado correto
+  } else {
+    const sum = f.map((v, i) => v + (h[i] || 0));
+    drawSignal(ctx, sum, 'red', -1.5, xOffset); // resultado incorreto
+  }
+}
+
+function convolve(f, h) {
+  const n = f.length + h.length - 1;
+  const result = new Array(n).fill(0);
+  for (let i = 0; i < f.length; i++) {
+    for (let j = 0; j < h.length; j++) {
+      result[i + j] += f[i] * h[j];
+    }
+  }
+  return result;
+}
+
+function drawSignal(ctx, signal, color = 'black', yOffset = 0, xOffset = 0) {
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+
+  signal.forEach((y, x) => {
+    const canvasX = xOffset + x * 2; // menor escala no X
+    const canvasY = ctx.canvas.height / 2 - (y + yOffset) * 25; // menor escala no Y
+
+    if (x === 0) {
+      ctx.moveTo(canvasX, canvasY);
+    } else {
+      ctx.lineTo(canvasX, canvasY);
+    }
+  });
+  ctx.stroke();
+}
+
+
+

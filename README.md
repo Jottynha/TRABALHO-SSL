@@ -82,7 +82,7 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | Arquivo / Pasta    | Descrição                                                                 |
 |--------------------|---------------------------------------------------------------------------|
 | [`index.html`](#index-html) | Página principal do projeto. Contém a estrutura básica do jogo em HTML.   |
-| `style.css`        | Folha de estilos responsável pelo layout e visual do jogo.                |
+| [`style.css`](#style-css)        | Folha de estilos responsável pelo layout e visual do jogo.                |
 | `js/`              | Diretório que contém todos os scripts JavaScript utilizados no projeto.   |
 | `js/audio.js`      | Gerencia os efeitos sonoros e sons do jogo.                              |
 | `js/drawing.js`    | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
@@ -180,5 +180,114 @@ Carrega o script principal JavaScript (`main.js`), que contém toda a lógica de
 * Navegação entre as telas.
 * Geração das perguntas e ondas.
 * Lógica dos modos de jogo.
+
+---
+
+<h3 id="style-css">📄 Estrutura do Arquivo CSS (`style.css`)</h3>
+
+O arquivo `style.css` é responsável por toda a estilização visual do projeto, definindo cores, espaçamentos, fontes, organização de layout e aparência dinâmica. A seguir, destacamos as principais áreas de estilização e suas funções:
+
+#### 1. **Estilos básicos globais**
+
+```css
+html, body {
+  height: 200%;
+  margin: 0;
+  padding: 0;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+```
+
+Define altura total da página, remove margens e ativa rolagem nos eixos horizontal e vertical.
+
+```css
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+```
+
+Aplica o modelo `box-sizing: border-box` universalmente e remove margens/padding padrão dos navegadores.
+
+#### 2. **Cores e variáveis**
+
+```css
+:root {
+  --primary-green: #2AA64F;
+  --dark-green: #1F8A3D;
+  --light-bg: #F7F9FA;
+  --dark-bg: #2E2E2E;
+  --text-dark: #333;
+  --text-light: #000000;
+  --white: #FFF;
+  --card-bg: #FFF;
+  --card-dark: #3A3A3A;
+  --shadow: rgba(0, 0, 0, 0.1);
+}
+```
+
+Declara variáveis CSS reutilizáveis que centralizam o controle de cores e estilos, facilitando a manutenção e o modo escuro.
+
+#### 3. **Modo Claro e Escuro**
+
+```css
+body {
+  background: var(--light-bg);
+  color: var(--text-dark);
+}
+body.dark-mode {
+  background: var(--dark-bg);
+  color: var(--text-light);
+}
+```
+
+Altera as cores do fundo e texto dinamicamente dependendo se o modo escuro está ativado (`dark-mode` é uma classe adicionada ao `body`).
+
+#### 4. **Elementos da interface do jogo**
+
+* `#auth-screen`, `#welcome-screen`, `.flex-container`, `#score-container`: controlam a exibição das telas iniciais e do jogo.
+* `.btn`, `.btn-primary`, `.btn-option`: estilos para botões com efeitos de hover e clique.
+* `#score-container`, `.score-number`: mostra e anima a pontuação do jogador.
+
+#### 5. **Cards informativos**
+
+```css
+.card, #highscore-card, #completed-lessons-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px var(--shadow);
+}
+```
+
+Define a aparência dos cards que mostram pontuações, progresso e lições concluídas, com cantos arredondados e sombras.
+
+#### 6. **Modal e overlays**
+
+* `.modal`: janelas modais flutuantes para mostrar mensagens ou interações extras.
+* `.overlay.success`, `.overlay.error`: coberturas transparentes para indicar visualmente o sucesso ou erro de uma ação.
+
+
+#### 7. **Barra de progresso**
+
+```css
+.progress-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  ...
+}
+```
+
+Define uma barra fixa no rodapé que exibe o progresso do usuário durante as atividades.
+
+
+#### 8. **Outros detalhes**
+
+* `.lesson-difficulty`: indica o nível de dificuldade das lições com estilo itálico e cor discreta.
+* `.toggle`: botão de alternância para mudar o tema claro/escuro.
+* `.close`: botão de fechar janelas modais.
 
 ---

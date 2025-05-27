@@ -75,13 +75,13 @@ Caso tenha dúvidas ou queira contribuir com o projeto, acesse o repositório of
 🔗 [https://github.com/Jottynha/TRABALHO-SSL](https://github.com/Jottynha/TRABALHO-SSL)
 
 
-## Estrutura do Projeto
+### Estrutura do Projeto
 
 A tabela a seguir apresenta os principais arquivos e diretórios que compõem o projeto, bem como uma breve descrição de suas funções:
 
 | Arquivo / Pasta    | Descrição                                                                 |
 |--------------------|---------------------------------------------------------------------------|
-| `index.html`       | Página principal do projeto. Contém a estrutura básica do jogo em HTML.   |
+| [`index.html`](#index-html) | Página principal do projeto. Contém a estrutura básica do jogo em HTML.   |
 | `style.css`        | Folha de estilos responsável pelo layout e visual do jogo.                |
 | `js/`              | Diretório que contém todos os scripts JavaScript utilizados no projeto.   |
 | `js/audio.js`      | Gerencia os efeitos sonoros e sons do jogo.                              |
@@ -90,3 +90,95 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | `js/questions.js`  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
 | `js/ui.js`         | Gerencia a interface do usuário, como botões e telas interativas.         |
 
+---
+
+<h3 id="index-html">📄 Estrutura do Arquivo HTML (`index.html`)</h3>
+
+O arquivo `index.html` é a base da interface gráfica do projeto **Ritmo dos Sinais**. Ele define a estrutura e os elementos visuais apresentados ao usuário, desde a tela de autenticação até o ambiente interativo das lições. A seguir, descrevemos sua composição e funcionalidade:
+
+#### 1. **Cabeçalho (`<head>`)**
+
+No início do documento, temos:
+
+* `<!DOCTYPE html>`: Define o tipo do documento como HTML5.
+* `<html lang="pt">`: Indica que o conteúdo da página está em português.
+* `<meta charset="UTF-8" />`: Define a codificação dos caracteres como UTF-8.
+* `<meta name="viewport" content="width=device-width, initial-scale=1" />`: Torna a interface responsiva em dispositivos móveis.
+* `<title>Ritmo dos Sinais</title>`: Define o título exibido na aba do navegador.
+* Inclusão de fontes e estilos:
+
+  * `Poppins` via Google Fonts.
+  * `style.css`: arquivo CSS externo responsável pela estilização geral.
+  * `SweetAlert2`: biblioteca para exibição de alertas e mensagens amigáveis.
+
+#### 2. **Tela de Autenticação**
+
+```html
+<div id="auth-screen" class="card">
+```
+
+Essa `div` representa a tela inicial, onde o usuário pode:
+
+* Inserir nome de usuário e senha.
+* Alternar entre **Login** e **Criar Conta**.
+* Visualizar mensagens de erro, caso ocorra falha na autenticação.
+
+#### 3. **Tela de Boas-Vindas**
+
+```html
+<div id="welcome-screen">
+```
+
+Após o login, o usuário é recepcionado com uma breve explicação sobre o jogo e duas opções:
+
+* **Modo Lição**: aprendizado progressivo.
+* **Modo Infinito**: desafios contínuos.
+
+#### 4. **Interface Principal**
+
+```html
+<div class="flex-container">
+```
+
+Esse bloco contém os principais elementos do jogo:
+
+* **Menu de Lições** (`#menu-screen`): botões para selecionar lições. Apenas a Lição 1 e a Lição 9 estão habilitadas inicialmente.
+* **Tela de Jogo** (`#game-screen`): exibe a lição atual, pergunta, botão para ouvir o som, canvas com a onda sonora e as opções de resposta.
+* **Painel Lateral**:
+
+  * `#info-card`: mostra detalhes adicionais sobre o conteúdo após acertos.
+  * `#highscore-card`: exibe a maior pontuação.
+  * `#completed-lessons-card`: lista as lições finalizadas.
+  * `#tips`: dicas educacionais.
+  * `#btn-info`: botão que abre o modal com **Informações do Projeto**.
+  * `#btn-settings`: botão de **Configurações** para redefinir pontuações.
+
+#### 5. **Modais**
+
+Dois modais principais são implementados:
+
+* **Informações do Projeto**: lista os membros da equipe, e-mail de contato e link para o repositório.
+* **Configurações**: oferece a opção de apagar os scores salvos.
+
+#### 6. **Outros Elementos**
+
+* `#score-container`: mostra a pontuação atual e vidas restantes.
+* `#toggle-dark`: botão para alternar o modo claro/escuro (ícone de lua).
+* `#progress-bar`: barra de progresso visual.
+* `#tooltip`: dica flutuante exibida em determinadas interações.
+* `#overlay`: camada para bloquear interações durante transições/modais.
+
+#### 7. **Importação de Scripts**
+
+```html
+<script type="module" src="js/main.js"></script>
+```
+
+Carrega o script principal JavaScript (`main.js`), que contém toda a lógica de funcionamento da aplicação, como:
+
+* Login e criação de contas.
+* Navegação entre as telas.
+* Geração das perguntas e ondas.
+* Lógica dos modos de jogo.
+
+---

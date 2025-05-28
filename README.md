@@ -94,7 +94,7 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | [`js/audio.js`](#audio-js)      | Gerencia os efeitos sonoros e sons do jogo.                              |
 | [`js/drawing.js`](#drawing-js)   | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
 | [`js/main.js`](#main-js)       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
-| `js/questions.js`  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
+| [`js/questions.js`](#questions-js)  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
 | `js/ui.js`         | Gerencia a interface do usuário, como botões e telas interativas.         |
 
 ---
@@ -623,6 +623,111 @@ O `main.js` atua como **controlador central do jogo**, lidando com:
 * Gestão de eventos e som.
 
 ---
+
+<h3 id="questions-js">📄 Estrutura do Questions JS (`questions.js`)</h3>
+
+### **1. Importações de Módulos**
+
+Este bloco importa funções e objetos de outros arquivos JavaScript, organizando a lógica do jogo:
+
+```js
+import { DOM, showOverlay, updateScore, ... } from './ui.js';
+import { playFeedbackSound } from './audio.js';
+import { desenharOnda, drawScaledSignal, ... } from './drawing.js';
+import { returnToWelcome, saveState } from './main.js';
+```
+
+Essas funções manipulam interface, áudios, desenhos e o estado geral do app.
+
+### **2. Configuração Geral do Estado e Dificuldade**
+
+Define o estado do jogo e a dificuldade de cada lição:
+
+```js
+export const lessonDifficulty = { 1: 'Médio', 2: 'Médio', ... };
+export const state = {
+  currentLesson: 0,
+  currentAnswer: '',
+  score: 0,
+  lives: 3,
+  ...
+};
+```
+
+Esse objeto `state` é o coração da lógica, armazenando o progresso e modo atual do jogador.
+
+### **3. Dicas por Lição**
+
+Define textos explicativos que acompanham cada lição:
+
+```js
+export const lessonTips = {
+  1: "As ondas senoidais, quadradas e dente de serra diferem em forma...",
+  2: "Filtros selecionam faixas de frequência específicas de um sinal...",
+  ...
+};
+```
+
+Essas dicas são exibidas ao usuário como auxílio teórico.
+
+### **4. Mapas de Tipos de Áudio**
+
+Relaciona os nomes mostrados na interface com os tipos reais de sinal/áudio:
+
+```js
+export const audioTypes = {
+  'Onda senoidal': 'sine',
+  'Filtro passa-baixa': 'lowpass',
+  ...
+};
+```
+
+Esse mapeamento ajuda a tocar o som correto baseado na escolha do usuário.
+
+### **5. Informações Adicionais de Conteúdo**
+
+Exibe descrições resumidas e complementares sobre cada tipo de áudio:
+
+```js
+export const infoContent = {
+  sine: { text: 'Onda senoidal: forma pura...', extra: 'Presente em sinais...' },
+  lowpass: { text: 'Filtro passa-baixa...', extra: 'Bloqueia ruído...' },
+  ...
+};
+```
+
+### **6. Elementos do DOM e Contexto do Canvas**
+
+Seleciona elementos da interface HTML e contexto de desenho:
+
+```js
+const playSoundButton = document.getElementById('btn-play-sound');
+const canvas = document.getElementById('wave-canvas-game');
+const ctx = canvas.getContext('2d');
+```
+
+Esses elementos permitem interatividade com o usuário e visualização gráfica dos sinais.
+
+### **7. Função `setupQuestion()`**
+
+Função central que configura as perguntas do quiz:
+
+```js
+export function setupQuestion() {
+  DOM.optionsContainer.innerHTML = '';
+  ...
+  if (state.isInfinityMode) {
+    // Escolhe aleatoriamente uma lição e suas opções
+  } else {
+    // Usa a lição atual definida no estado
+  }
+}
+```
+
+Dependendo do modo do jogo (comum ou infinito), ela escolhe a pergunta certa, define as opções de resposta, atualiza o nível de dificuldade e o texto da pergunta.
+
+---
+
 
 
 

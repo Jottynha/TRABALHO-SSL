@@ -3,6 +3,7 @@
 ![Static Badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
 ![Static Badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+![Static Badge](https://img.shields.io/badge/Ubuntu-orange?style=flat&logo=ubuntu)
 
 
 ## Introdução
@@ -90,7 +91,7 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | [`index.html`](#index-html) | Página principal do projeto. Contém a estrutura básica do jogo em HTML.   |
 | [`style.css`](#style-css)        | Folha de estilos responsável pelo layout e visual do jogo.                |
 | `js/`              | Diretório que contém todos os scripts JavaScript utilizados no projeto.   |
-| `js/audio.js`      | Gerencia os efeitos sonoros e sons do jogo.                              |
+| [`audio.js`](#audio-js)      | Gerencia os efeitos sonoros e sons do jogo.                              |
 | `js/drawing.js`    | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
 | `js/main.js`       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
 | `js/questions.js`  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
@@ -297,6 +298,103 @@ Define uma barra fixa no rodapé que exibe o progresso do usuário durante as at
 * `.close`: botão de fechar janelas modais.
 
 ---
+Aqui está a documentação em Markdown no exato modelo que você solicitou, para o arquivo `audio.js`:
+
+---
+
+<h3 id="audio-js"> Estrutura do Arquivo JS (`audio.js`)</h3>
+
+O arquivo `audio.js` é responsável por toda a manipulação de sons do projeto. Ele implementa a criação de contexto de áudio, emissão de diferentes tipos de sons para cada lição, e efeitos sonoros de feedback (como sucesso ou erro). Utiliza a API Web Audio para gerar sons programaticamente.
+
+#### 1. **Inicialização do Contexto de Áudio**
+
+```js
+let audioContext = null;
+
+export function initAudio() {
+  if (!audioContext) {
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioContext;
+}
+```
+
+Cria um `AudioContext` (caso ainda não exista), necessário para todas as operações de áudio. Compatível com diferentes navegadores.
+
+#### 2. **Som da Lição Atual (`playSoundForLesson`)**
+
+```js
+export function playSoundForLesson(currentLesson, currentAnswer, audioTypes) {
+  const ctx = initAudio();
+  const dur = 1.0;
+  ...
+}
+```
+
+Função principal que gera sons diferentes dependendo da lição atual:
+
+* **Lição 1**: Som simples com oscilador e tipo de onda baseado na resposta:
+
+  ```js
+  osc.type = audioTypes[currentAnswer];
+  osc.frequency.setValueAtTime(440, ctx.currentTime);
+  ```
+
+* **Lição 2**: Adiciona um filtro ao som, modificando a frequência e tipo do filtro de acordo com a resposta:
+
+  ```js
+  filter.type = audioTypes[currentAnswer];
+  filter.frequency.setValueAtTime(1000, ctx.currentTime);
+  ```
+
+* **Lição 3**: Aplica modulação (AM ou FM):
+
+  * **AM**:
+
+    ```js
+    mod.connect(mg);
+    mg.connect(output.gain);
+    ```
+
+  * **FM**:
+
+    ```js
+    mod.connect(mg).connect(carrier.frequency);
+    ```
+
+Cada lição possui uma estrutura de áudio diferente, simulando conceitos musicais ou de eletrônica.
+
+#### 3. **Som de Feedback (`playFeedbackSound`)**
+
+```js
+export function playFeedbackSound(type) {
+  const ctx = initAudio();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  ...
+}
+```
+
+Gera sons curtos de feedback:
+
+* **Successo (`type === 'success'`)**:
+
+  * Onda do tipo `triangle`
+  * Frequência de 880 Hz
+  * Volume mais suave
+
+* **Erro (qualquer outro tipo)**:
+
+  * Onda do tipo `sawtooth`
+  * Frequência de 220 Hz
+  * Volume mais forte
+
+Finaliza o som após 200 milissegundos com `setTimeout`.
+
+---
+
+
+
 
 ## Integrantes:
 
@@ -315,7 +413,7 @@ Define uma barra fixa no rodapé que exibe o progresso do usuário durante as at
 
 **Rafael Ferreira da Rocha**  
 [![Static Badge](https://img.shields.io/badge/%7C%20rafanduba-black?style=flat-square&logo=github)](https://github.com/rafanduba)
-[![Static Badge](https://img.shields.io/badge/%7C%20rafaelricha241003%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:rafaelrocha241003@gmail.com)
+[![Static Badge](https://img.shields.io/badge/%7C%20rafaelrocha241003%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:rafaelrocha241003@gmail.com)
 
 **Samuel Silva Gomes**  
 [![Static Badge](https://img.shields.io/badge/%7C%20samuelsilvg-black?style=flat-square&logo=github)](https://github.com/samuelsilvg)

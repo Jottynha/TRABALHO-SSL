@@ -91,8 +91,8 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | [`index.html`](#index-html) | Página principal do projeto. Contém a estrutura básica do jogo em HTML.   |
 | [`style.css`](#style-css)        | Folha de estilos responsável pelo layout e visual do jogo.                |
 | `js/`              | Diretório que contém todos os scripts JavaScript utilizados no projeto.   |
-| [`audio.js`](#audio-js)      | Gerencia os efeitos sonoros e sons do jogo.                              |
-| `js/drawing.js`    | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
+| [`js/audio.js`](#audio-js)      | Gerencia os efeitos sonoros e sons do jogo.                              |
+| [`js/drawing.js`](#drawing-js)   | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
 | `js/main.js`       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
 | `js/questions.js`  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
 | `js/ui.js`         | Gerencia a interface do usuário, como botões e telas interativas.         |
@@ -298,9 +298,6 @@ Define uma barra fixa no rodapé que exibe o progresso do usuário durante as at
 * `.close`: botão de fechar janelas modais.
 
 ---
-Aqui está a documentação em Markdown no exato modelo que você solicitou, para o arquivo `audio.js`:
-
----
 
 <h3 id="audio-js"> Estrutura do Arquivo JS (`audio.js`)</h3>
 
@@ -390,6 +387,83 @@ Gera sons curtos de feedback:
   * Volume mais forte
 
 Finaliza o som após 200 milissegundos com `setTimeout`.
+
+---
+
+<h3 id="drawing-js"> Estrutura do Arquivo JS (`drawing.js`)</h3>
+
+O arquivo `drawing.js` é responsável por desenhar graficamente no canvas os diversos tipos de ondas, transformações e filtros associados às lições. Ele utiliza a API Canvas 2D do HTML5 para gerar representações visuais de sinais periódicos, modulações e respostas de filtros.
+
+#### 1. **Função Principal de Desenho (`desenharOnda`)**
+
+```js
+export function desenharOnda(tipo) {
+  const canvas = document.getElementById("wave-canvas");
+  const ctx = canvas.getContext("2d");
+  ...
+}
+```
+
+Escolhe o tipo de onda ou transformação e chama a função correspondente:
+
+* `'sine'`, `'square'`, `'sawtooth'`: Desenha ondas básicas.
+* `'lowpass'`, `'highpass'`, `'bandpass'`: Desenha respostas de filtros.
+* `'am'`, `'fm'`: Representações visuais das modulações AM e FM.
+
+---
+
+#### 2. **Degrau Unitário (`drawUnitStep`)**
+
+```js
+function drawUnitStep(ctx, displacement) {
+  ctx.beginPath();
+  ctx.moveTo(0, 150);
+  ...
+}
+```
+
+Desenha um **degrau unitário suavizado**, deslocado horizontalmente:
+
+* Usa tangente hiperbólica `Math.tanh(...)` para suavização.
+* Cor da linha: azul escuro.
+* Útil para representar funções de entrada em sistemas lineares.
+
+---
+
+#### 3. **Sinal Escalado Horizontalmente (`drawScaledSignal`)**
+
+```js
+function drawScaledSignal(ctx, scaleFactor) {
+  ctx.beginPath();
+  ...
+}
+```
+
+Desenha duas ondas senoides:
+
+* **Onda original** (preta).
+* **Versão escalada** horizontalmente pelo fator de escala `scaleFactor` (vermelha).
+* Inclui legenda embutida no canvas.
+
+Representa transformações temporais do tipo $x(at)$.
+
+---
+
+#### 4. **Alteração de Amplitude (`drawAmplitudeChange`)**
+
+```js
+function drawAmplitudeChange(ctx, amplitudeFactor) {
+  const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+  ...
+}
+```
+
+Desenha uma senoide cuja **amplitude foi modificada**:
+
+* Onda verde sobre um fundo em degradê.
+* O fator `amplitudeFactor` controla a intensidade da onda.
+
+Útil para representar transformações do tipo $A \cdot x(t)$.
 
 ---
 

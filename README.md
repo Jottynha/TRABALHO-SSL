@@ -1,4 +1,10 @@
 # Jogo Educacional para Disciplina de Sinais e Sistemas Lineares 
+
+![Static Badge](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
+![Static Badge](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+![Static Badge](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+
+
 ## Introdução
 
 Este projeto, desenvolvido sob orientação da professora Thabatta, docente da disciplina de **Sinais e Sistemas Lineares** no Centro Federal de Educação Tecnológica de Minas Gerais (CEFET-MG), tem como objetivo a criação de um **jogo educacional** voltado para o apoio ao ensino e à aprendizagem dos principais conceitos da disciplina.
@@ -291,3 +297,41 @@ Define uma barra fixa no rodapé que exibe o progresso do usuário durante as at
 * `.close`: botão de fechar janelas modais.
 
 ---
+
+## Integrantes:
+
+**João Pedro Rodrigues Silva**  
+[![Static Badge](https://img.shields.io/badge/%7C%20Jottynha-black?style=flat-square&logo=github)](https://github.com/Jottynha)
+[![Static Badge](https://img.shields.io/badge/%7C%20jprs1308%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:jprs1308@gmail.com)
+
+
+**Jader Oliveira Silva**  
+[![Static Badge](https://img.shields.io/badge/%7C%200livas-black?style=flat-square&logo=github)](https://github.com/0livas)
+[![Static Badge](https://img.shields.io/badge/%7C%20jaderoliveira28%40gmail.com%20%20-black?style=flat-square&logo=gmail)](mailto:jaderoliveira28@gmail.com)
+
+**Pedro Augusto Moura**  
+[![Static Badge](https://img.shields.io/badge/%7C%20PedroAugusto08-black?style=flat-square&logo=github)](https://github.com/PedroAugusto08)
+[![Static Badge](https://img.shields.io/badge/%7C%20pedroaugustomoura70927%40gmail.com-black?style=flat-square&logo=gmail)](mailto:pedroaugustomoura70927@gmail.com)
+
+**Rafael Ferreira da Rocha**  
+[![Static Badge](https://img.shields.io/badge/%7C%20rafanduba-black?style=flat-square&logo=github)](https://github.com/rafanduba)
+[![Static Badge](https://img.shields.io/badge/%7C%20rafaelricha241003%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:rafaelrocha241003@gmail.com)
+
+**Samuel Silva Gomes**  
+[![Static Badge](https://img.shields.io/badge/%7C%20samuelsilvg-black?style=flat-square&logo=github)](https://github.com/samuelsilvg)
+[![Static Badge](https://img.shields.io/badge/%7C%20silvagomes881%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:silvagomes881@gmail.com)
+
+___
+
+
+<!---
+✉️ jprs1308@gmail.com (**João Pedro Rodrigues Silva**)
+
+✉️ jaderoliveira28@gmail.com (**Jader Oliveira Silva**)
+
+✉️ pedroaugustomoura70927@gmail.com (**Pedro Augusto Moura**)
+
+✉️ rafaelrocha241003@gmail.com (**Rafael Ferreira da Rocha**)  
+
+✉️ silvagomes881@gmail.com (**Samuel Silva Gomes**)
+--->

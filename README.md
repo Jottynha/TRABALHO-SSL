@@ -93,7 +93,7 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | `js/`              | Diretório que contém todos os scripts JavaScript utilizados no projeto.   |
 | [`js/audio.js`](#audio-js)      | Gerencia os efeitos sonoros e sons do jogo.                              |
 | [`js/drawing.js`](#drawing-js)   | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
-| `js/main.js`       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
+| [`js/main.js`](#main-js)       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
 | `js/questions.js`  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
 | `js/ui.js`         | Gerencia a interface do usuário, como botões e telas interativas.         |
 
@@ -299,7 +299,7 @@ Define uma barra fixa no rodapé que exibe o progresso do usuário durante as at
 
 ---
 
-<h3 id="audio-js"> Estrutura do Arquivo JS (`audio.js`)</h3>
+<h3 id="audio-js">📄 Estrutura do Arquivo JS (`audio.js`)</h3>
 
 O arquivo `audio.js` é responsável por toda a manipulação de sons do projeto. Ele implementa a criação de contexto de áudio, emissão de diferentes tipos de sons para cada lição, e efeitos sonoros de feedback (como sucesso ou erro). Utiliza a API Web Audio para gerar sons programaticamente.
 
@@ -390,7 +390,7 @@ Finaliza o som após 200 milissegundos com `setTimeout`.
 
 ---
 
-<h3 id="drawing-js"> Estrutura do Arquivo JS (`drawing.js`)</h3>
+<h3 id="drawing-js">📄 Estrutura do Arquivo JS (`drawing.js`)</h3>
 
 O arquivo `drawing.js` é responsável por desenhar graficamente no canvas os diversos tipos de ondas, transformações e filtros associados às lições. Ele utiliza a API Canvas 2D do HTML5 para gerar representações visuais de sinais periódicos, modulações e respostas de filtros.
 
@@ -466,6 +466,165 @@ Desenha uma senoide cuja **amplitude foi modificada**:
 Útil para representar transformações do tipo $A \cdot x(t)$.
 
 ---
+
+
+<h3 id="main-js">📄 Estrutura do Main JS (`main.js`)</h3>
+
+O arquivo `main.js` é o **ponto de entrada principal** da aplicação e tem como objetivo **controlar o fluxo do jogo educacional**, desde a autenticação de usuários até o controle da interface e a inicialização das lições. Abaixo, o funcionamento do arquivo é descrito por blocos de funcionalidade:
+
+### **Importações**
+
+```js
+import { initAudio, playSoundForLesson } from './audio.js';
+import { toggleDarkMode, DOM, updateHighScore, unlockLesson } from './ui.js';
+import { setupQuestion, state, audioTypes, lessonTips, updateCompletedLessons } from './questions.js';
+```
+
+Esses módulos são responsáveis por funcionalidades específicas:
+
+* `audio.js`: inicia e toca sons relacionados à lição.
+* `ui.js`: manipula elementos visuais e temas.
+* `questions.js`: estrutura o estado atual, configura questões, dicas e progresso.
+
+### **Autenticação de Usuários**
+
+Funções para **carregar e salvar usuários no `localStorage`**:
+
+```js
+const LS_USERS_KEY = 'ssl_users';
+function loadUsers() { ... }
+function saveUsers(users) { ... }
+```
+
+Gerencia o **modo de login/cadastro**, usando as variáveis `isLoginMode` e `currentUser`.
+
+### **Tela de Autenticação**
+
+```js
+function showAuth() { ... }
+function showWelcome() { ... }
+```
+
+Exibe a **tela de login ou criação de conta**. Após autenticação bem-sucedida, carrega os dados do usuário e mostra a **tela inicial do jogo**.
+
+### **Alternância de Modo de Autenticação**
+
+```js
+toggleAuth.addEventListener('click', () => { ... });
+```
+
+Alterna entre **Login** e **Criar Conta**, atualizando o texto dos botões e o título da tela.
+
+### **Ação de Login ou Cadastro**
+
+```js
+btnAuthAction.addEventListener('click', () => { ... });
+```
+
+Valida os campos, realiza login (verificando senha) ou cria novo usuário (verificando duplicatas). Após isso, chama `showWelcome()`.
+
+### **Salvamento de Estado**
+
+```js
+window.addEventListener('beforeunload', () => { ... });
+export function saveState() { ... }
+```
+
+Salva o estado do jogo atual tanto no `localStorage` global quanto no objeto do usuário específico.
+
+### **Função `returnToWelcome()`**
+
+```js
+export function returnToWelcome() { ... }
+```
+
+Restaura o jogo ao **estado inicial**, reiniciando pontuação, vidas e lição atual.
+
+### **Função `startLesson(lessonNumber)`**
+
+```js
+function startLesson(lessonNumber) { ... }
+```
+
+Configura e inicia uma lição específica:
+
+* Define o número da lição atual.
+* Atualiza dicas na interface.
+* Inicializa o áudio.
+* Chama `setupQuestion()` para gerar perguntas.
+
+### **Função `updateTipsContent(lesson)`**
+
+```js
+function updateTipsContent(lesson) { ... }
+```
+
+Carrega as **dicas específicas** da lição na interface.
+
+### **Inicialização da Interface com `initUI()`**
+
+```js
+function initUI() { ... }
+```
+
+Define os **event listeners** dos botões da interface:
+
+* Modo de lição ou infinito.
+* Cada botão de lição.
+* Botão de som.
+* Botão de voltar ao menu.
+* Modal de informações.
+* Tema escuro.
+
+### **Restauração do Estado Salvo**
+
+```js
+const saved = JSON.parse(localStorage.getItem('ssl_state'));
+if (saved) {
+  Object.assign(state, saved);
+}
+```
+
+Caso exista estado salvo no navegador, ele é restaurado ao iniciar.
+
+### **Tooltip de Dificuldade**
+
+```js
+document.querySelectorAll('.btn-option').forEach(btn => { ... });
+```
+
+Adiciona uma **dica visual (tooltip)** com o nível de dificuldade sobre os botões de resposta.
+
+### **Modal de Configurações**
+
+```js
+document.getElementById('btn-settings').addEventListener(...);
+```
+
+Mostra ou esconde o **modal de configurações** ao clicar no botão correspondente.
+
+### **Limpar Scores**
+
+```js
+document.getElementById('btn-clear-scores').addEventListener(...);
+```
+
+Usa **SweetAlert2** para confirmar se o usuário quer apagar todos os scores salvos.
+
+## **Resumo do Comportamento**
+
+O `main.js` atua como **controlador central do jogo**, lidando com:
+
+* Acesso/autenticação do usuário.
+* Carregamento e persistência de estado.
+* Inicialização da interface.
+* Navegação entre telas (auth, menu, jogo).
+* Controle dos modos de jogo e dicas.
+* Gestão de eventos e som.
+
+---
+
+
 
 
 

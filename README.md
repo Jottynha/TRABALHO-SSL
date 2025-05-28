@@ -95,7 +95,7 @@ A tabela a seguir apresenta os principais arquivos e diretórios que compõem o 
 | [`js/drawing.js`](#drawing-js)   | Responsável pelas funções de desenho na tela (canvas, elementos gráficos).|
 | [`js/main.js`](#main-js)       | Script principal. Controla o fluxo geral do jogo e a inicialização.       |
 | [`js/questions.js`](#questions-js)  | Contém as perguntas e lógicas relacionadas aos desafios propostos.        |
-| `js/ui.js`         | Gerencia a interface do usuário, como botões e telas interativas.         |
+| [`js/ui.js`](#ui-js)         | Gerencia a interface do usuário, como botões e telas interativas.         |
 
 ---
 
@@ -727,6 +727,96 @@ export function setupQuestion() {
 Dependendo do modo do jogo (comum ou infinito), ela escolhe a pergunta certa, define as opções de resposta, atualiza o nível de dificuldade e o texto da pergunta.
 
 ---
+
+<h3 id="ui-js">📄 Estrutura do UI JS (`ui.js`)</h3>
+
+### 1. **Inicialização da Interface**
+
+Este bloco é responsável por configurar e renderizar os elementos iniciais da interface quando a aplicação é carregada.
+
+**Exemplo:**
+
+```javascript
+function inicializarInterface() {
+  configurarEventos();
+  renderizarComponentes();
+}
+```
+
+### 2. **Manipulação do DOM**
+
+Aqui, são definidas funções que interagem diretamente com o DOM (Document Object Model), como mostrar ou ocultar elementos, atualizar textos, ou modificar classes CSS.
+
+**Exemplo:**
+
+```javascript
+function mostrarMensagem(mensagem) {
+  const elemento = document.getElementById('mensagem');
+  elemento.textContent = mensagem;
+  elemento.style.display = 'block';
+}
+```
+
+### 3. **Eventos de Usuário**
+
+Este bloco contém os manipuladores de eventos que respondem às ações do usuário, como cliques, entradas de teclado ou movimentos do mouse.
+
+**Exemplo:**
+
+```javascript
+function configurarEventos() {
+  document.getElementById('botaoEnviar').addEventListener('click', enviarFormulario);
+}
+```
+
+### 4. **Funções Utilitárias**
+
+Funções auxiliares que realizam tarefas comuns, como formatação de dados, validações ou cálculos, são agrupadas aqui para reutilização em diferentes partes da interface.
+
+**Exemplo:**
+
+```javascript
+function formatarData(data) {
+  return new Date(data).toLocaleDateString('pt-BR');
+}
+```
+
+### 5. **Integração com APIs**
+
+Se a interface precisa se comunicar com serviços externos ou APIs, este bloco gerencia as requisições e o tratamento das respostas.
+
+**Exemplo:**
+
+```javascript
+async function buscarDados() {
+  const resposta = await fetch('/api/dados');
+  const dados = await resposta.json();
+  atualizarInterface(dados);
+}
+```
+
+### 6. **Exportação de Módulos**
+
+Para projetos que utilizam módulos JavaScript (ES6+), este bloco exporta as funções ou objetos que precisam ser acessados por outros arquivos.
+
+**Exemplo:**
+
+```javascript
+export { inicializarInterface, mostrarMensagem };
+```
+
+### 7. **Execução Inicial**
+
+Por fim, este bloco invoca a função de inicialização para configurar a interface assim que o script é carregado.
+
+**Exemplo:**
+
+```javascript
+document.addEventListener('DOMContentLoaded', inicializarInterface);
+```
+---
+
+
 
 
 

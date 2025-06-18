@@ -208,6 +208,7 @@ function initUI() {
   document.getElementById('lesson-btn-7').addEventListener('click', () => startLesson(7));
   document.getElementById('lesson-btn-8').addEventListener('click', () => startLesson(8));
   document.getElementById('lesson-btn-9').addEventListener('click', () => startLesson(9));
+  document.getElementById('lesson-btn-10').addEventListener('click', () => startLesson(10));
   // Botão para voltar ao menu
   DOM.btnVoltarMenu.addEventListener('click', returnToWelcome);
 
@@ -287,7 +288,7 @@ document.getElementById('btn-clear-scores').addEventListener('click', () => {
     cancelButtonText: 'Cancelar'
   }).then((result) => {
     if (result.isConfirmed) {
-      for (let i = 1; i <= 9; i++) {
+      for (let i = 1; i <= 10; i++) {
         state.lessonScores[i] = 0;
       }
       state.score = 0;

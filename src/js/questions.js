@@ -15,7 +15,8 @@ export const lessonDifficulty = {
   6: 'Difícil',
   7: 'Difícil',
   8: 'Difícil',
-  9: 'Médio'
+  9: 'Médio',
+  10: 'Médio'
 };
 
 export const state = {
@@ -24,7 +25,7 @@ export const state = {
   score: 0,
   lives: 3,
   isInfinityMode: false,
-  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0, 8:0, 9:0},
+  lessonScores: { 1: 0, 2: 0, 3: 0 , 4: 0, 5: 0, 6: 0, 7:0, 8:0, 9:0, 10: 0},
   threshold: 50,
   highScore: 0,
   lessonsCompleted: []
@@ -47,7 +48,10 @@ export const lessonTips = {
 
   8: "A convolução combina dois sinais para produzir um terceiro, refletindo como um sistema responde a um estímulo. Essa operação é essencial em filtragem, reconhecimento de padrões e processamento de imagens e sons. Visualize como a forma de um sinal afeta e molda o outro ao longo do tempo.",
 
-  9: "A correlação mede a semelhança entre dois sinais ao longo do tempo. Deslize um sinal sobre o outro e observe o quanto eles coincidem. Quando o alinhamento é perfeito, o valor da correlação é máximo. Isso é útil em reconhecimento de padrões, como identificar sinais repetitivos em um ruído."
+  9: "A correlação mede a semelhança entre dois sinais ao longo do tempo. Deslize um sinal sobre o outro e observe o quanto eles coincidem. Quando o alinhamento é perfeito, o valor da correlação é máximo. Isso é útil em reconhecimento de padrões, como identificar sinais repetitivos em um ruído.",
+
+  10: "A Transformada de Laplace converte funções do tempo contínuo em funções do domínio complexo (s). Ela permite resolver equações diferenciais e estudar sistemas com condições iniciais. Explore como funções básicas como u(t), e^{-at}, senos e deltas se transformam em expressões racionais de s, e entenda o significado físico do polo e da região de convergência."
+
 };
 
 
@@ -226,54 +230,208 @@ export function setupQuestion() {
           answer: "1",
           info: {
             text: "A Transformada de Fourier da função impulso δ(t) é igual a 1.",
-            extra: "Isso ocorre porque δ(t) possui todas as frequências igualmente representadas no domínio da frequência."
+            extra: "Porque δ(t) contém todas as frequências com igual peso — é o elemento neutro da convolução."
           }
         },
         {
-          question: "Qual é a frequência fundamental FS na DTFS para um sinal periódico de período N?",
-          options: ["2π/N", "N/2π", "πN"],
-          answer: "2π/N",
+          question: "Qual é a FT da função constante 1 (ou seja, u(t) = 1 para todo t)?",
+          options: ["δ(ω)", "2πδ(ω)", "1/ω"],
+          answer: "2πδ(ω)",
           info: {
-            text: "A frequência fundamental na DTFS é 2π/N.",
-            extra: "Ela representa o menor incremento de frequência entre harmônicas de um sinal periódico discreto."
+            text: "A FT de uma função constante 1 é 2πδ(ω).",
+            extra: "Isso mostra que um sinal constante no tempo tem apenas uma componente DC na frequência."
           }
         },
         {
-          question: "Qual a forma geral da DTFT de x[n]?",
-          options: [
-            "Soma infinita de x[n]e^(-jωn)", 
-            "Integral de x(t)e^(-jωt)", 
-            "Transformada de Laplace"
-          ],
-          answer: "Soma infinita de x[n]e^(-jωn)",
+          question: "Qual é a FT de e^(jω₀t)?",
+          options: ["2πδ(ω - ω₀)", "1", "δ(t)"],
+          answer: "2πδ(ω - ω₀)",
           info: {
-            text: "A DTFT é definida como uma soma infinita ponderada por exponenciais complexas.",
-            extra: "A fórmula é: X(ω) = Σ x[n]·e^(-jωn), somando sobre todos os n."
+            text: "A exponencial complexa e^(jω₀t) tem como FT o impulso deslocado 2πδ(ω - ω₀).",
+            extra: "Isso mostra que ela é uma única frequência pura no domínio da frequência."
           }
         },
         {
-          question: "Qual é a Transformada de Fourier (FT) do impulso unitário no domínio da frequência?",
-          options: ["1", "δ(ω)", "e^(jωt)"],
-          answer: "δ(ω)",
+          question: "Qual a FT do cosseno: cos(ω₀t)?",
+          options: ["π[δ(ω - ω₀) + δ(ω + ω₀)]", "2πδ(ω)", "1"],
+          answer: "π[δ(ω - ω₀) + δ(ω + ω₀)]",
           info: {
-            text: "A FT do impulso unitário (no tempo) é δ(ω) no domínio da frequência.",
-            extra: "Ou seja, um impulso no tempo resulta em um espectro constante infinito no domínio da frequência."
+            text: "A FT de cos(ω₀t) resulta em dois impulsos simétricos na frequência.",
+            extra: "Isso reflete a natureza real e par do cosseno."
+          }
+        },
+        {
+          question: "Qual a FT de sen(ω₀t)?",
+          options: ["jπ[δ(ω + ω₀) - δ(ω - ω₀)]", "2πδ(ω)", "cos(ω₀t)"],
+          answer: "jπ[δ(ω + ω₀) - δ(ω - ω₀)]",
+          info: {
+            text: "A Transformada de Fourier de sen(ω₀t) é jπ[δ(ω + ω₀) - δ(ω - ω₀)].",
+            extra: "O sinal ímpar resulta em simetria ímpar no domínio da frequência (antissimétrica)."
+          }
+        },
+        {
+          question: "A FT de uma função retangular no tempo (ret(t)) é:",
+          options: ["sinc(ω)", "δ(ω)", "ret(ω)"],
+          answer: "sinc(ω)",
+          info: {
+            text: "A transformada de uma função retangular no tempo é uma função sinc na frequência.",
+            extra: "Este é um exemplo clássico da dualidade entre largura no tempo e espalhamento na frequência."
+          }
+        },
+        {
+          question: "A FT da função sinc(t) é:",
+          options: ["ret(ω)", "δ(ω)", "1/ω"],
+          answer: "ret(ω)",
+          info: {
+            text: "A função sinc(t) no tempo se transforma em uma função retangular no domínio da frequência.",
+            extra: "Esse é outro exemplo da dualidade entre tempo e frequência."
+          }
+        },
+        {
+          question: "Qual a FT de um pulso exponencial decrescente e^{-at}u(t), com a > 0?",
+          options: ["1 / (a + jω)", "2πδ(ω)", "e^{-aω}"],
+          answer: "1 / (a + jω)",
+          info: {
+            text: "A transformada de e^{-at}u(t) é 1 / (a + jω).",
+            extra: "É uma função racional típica de sistemas causais e estáveis."
+          }
+        },
+        {
+          question: "Qual é a FT de uma função de Dirac deslocada: δ(t - t₀)?",
+          options: ["e^{-jωt₀}", "δ(ω - ω₀)", "2πδ(ω)"],
+          answer: "e^{-jωt₀}",
+          info: {
+            text: "A FT de δ(t - t₀) é e^{-jωt₀}.",
+            extra: "Esse resultado ilustra o teorema do deslocamento no tempo, que gera modulação de fase na frequência."
+          }
+        },
+        {
+          question: "A FT de x(t) = e^{-a|t|}, com a > 0, é:",
+          options: ["2a / (a² + ω²)", "1 / (a + jω)", "δ(ω)"],
+          answer: "2a / (a² + ω²)",
+          info: {
+            text: "A FT de e^{-a|t|} é 2a / (a² + ω²).",
+            extra: "Esse tipo de função aparece em sistemas de amortecimento exponencial simétrico."
           }
         }
       ];
 
-      // Escolher pergunta aleatória dessa lição 9
       const randomIndex = Math.floor(Math.random() * tableQuestions.length);
       const q = tableQuestions[randomIndex];
       questionTextElement.textContent = q.question;
 
       opts = [...q.options];
 
-      // Guardar a pergunta e resposta para uso posterior
       state.currentAnswer = q.answer;
       DOM.infoText.textContent = q.info.text;
       DOM.infoExtra.textContent = q.info.extra;
     }
+    if (state.currentLesson === 10) {
+      const tableQuestions = [
+        {
+          question: "Qual é a Transformada de Laplace de δ(t)?",
+          options: ["1", "s", "δ(s)"],
+          answer: "1",
+          info: {
+            text: "A Transformada de Laplace da função impulso δ(t) é 1.",
+            extra: "Isso ocorre porque ∫δ(t)e^(-st)dt = e^(-s·0) = 1."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de u(t), a função degrau unitário?",
+          options: ["1/s", "s", "δ(s)"],
+          answer: "1/s",
+          info: {
+            text: "A Transformada de Laplace de u(t) é 1/s.",
+            extra: "É um resultado fundamental: o degrau unitário representa um ganho constante no domínio do tempo."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de e^{-at}·u(t)?",
+          options: ["1/(s + a)", "e^{-as}", "s/(s + a)"],
+          answer: "1/(s + a)",
+          info: {
+            text: "A Transformada de e^{-at}·u(t) é 1 / (s + a).",
+            extra: "Esse resultado é válido para Re(s) > -a e representa um decaimento exponencial causal."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de cos(ωt)·u(t)?",
+          options: ["s / (s² + ω²)", "ω / (s² + ω²)", "1 / (s - ω)"],
+          answer: "s / (s² + ω²)",
+          info: {
+            text: "A Transformada de Laplace de cos(ωt)·u(t) é s / (s² + ω²).",
+            extra: "A parte real do exponencial complexo aparece no numerador como s."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de sin(ωt)·u(t)?",
+          options: ["ω / (s² + ω²)", "s / (s² + ω²)", "1 / (s + ω)"],
+          answer: "ω / (s² + ω²)",
+          info: {
+            text: "A Transformada de sin(ωt)·u(t) é ω / (s² + ω²).",
+            extra: "Esse é um exemplo clássico de oscilação amortecida no domínio de Laplace."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de t·u(t)?",
+          options: ["1/s²", "s", "1/(s + 1)"],
+          answer: "1/s²",
+          info: {
+            text: "A Transformada de Laplace de t·u(t) é 1/s².",
+            extra: "Esse resultado mostra que integrar no tempo corresponde a dividir por potências de s."
+          }
+        },
+        {
+          question: "Qual é a Transformada de Laplace de tⁿ·u(t)?",
+          options: ["n!/sⁿ⁺¹", "1/sⁿ", "sⁿ/n!"],
+          answer: "n!/sⁿ⁺¹",
+          info: {
+            text: "A Transformada de Laplace de tⁿ·u(t) é n! / sⁿ⁺¹.",
+            extra: "Esse resultado generaliza a transformação de potências de t multiplicadas por degraus."
+          }
+        },
+        {
+          question: "Qual a Transformada de Laplace da derivada: dx/dt?",
+          options: ["sX(s) - x(0)", "X(s)/s", "s²X(s)"],
+          answer: "sX(s) - x(0)",
+          info: {
+            text: "A Transformada de Laplace da derivada é sX(s) - x(0).",
+            extra: "Essa é a base para a resolução de EDOs com condições iniciais no domínio de Laplace."
+          }
+        },
+        {
+          question: "Qual a Transformada de Laplace de e^{-at}·f(t)?",
+          options: ["F(s + a)", "F(s - a)", "F(s)e^{-as}"],
+          answer: "F(s + a)",
+          info: {
+            text: "Esse é o teorema do deslocamento no tempo para exponenciais multiplicando sinais.",
+            extra: "Multiplicar f(t) por e^{-at} desloca a função F(s) para a direita: F(s + a)."
+          }
+        },
+        {
+          question: "Qual a Transformada de Laplace de f(t - T)·u(t - T)?",
+          options: ["e^{-sT}·F(s)", "F(s - T)", "F(s)e^{sT}"],
+          answer: "e^{-sT}·F(s)",
+          info: {
+            text: "Esse é o teorema do deslocamento no tempo para atrasos.",
+            extra: "Um atraso de T segundos no tempo gera uma multiplicação por e^{-sT} no domínio de Laplace."
+          }
+        }
+      ];
+
+      const randomIndex = Math.floor(Math.random() * tableQuestions.length);
+      const q = tableQuestions[randomIndex];
+      questionTextElement.textContent = q.question;
+
+      opts = [...q.options];
+
+      state.currentAnswer = q.answer;
+      DOM.infoText.textContent = q.info.text;
+      DOM.infoExtra.textContent = q.info.extra;
+    }
+
+
 
   }
 

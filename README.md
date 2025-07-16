@@ -843,6 +843,11 @@ document.addEventListener('DOMContentLoaded', inicializarInterface);
 [![Static Badge](https://img.shields.io/badge/%7C%20rafanduba-black?style=flat-square&logo=github)](https://github.com/rafanduba)
 [![Static Badge](https://img.shields.io/badge/%7C%20rafaelrocha241003%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:rafaelrocha241003@gmail.com)
 
+**Rafael Adolfo Silva Ferreira**  
+[![Static Badge](https://img.shields.io/badge/%7C%20Radsfer-black?style=flat-square&logo=github)](https://github.com/Radsfer)
+[![Static Badge](https://img.shields.io/badge/%7C%20rafael.ferreira11.98%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:rafael.ferreira11.98@gmail.com )
+
+
 **Samuel Silva Gomes**  
 [![Static Badge](https://img.shields.io/badge/%7C%20samuelsilvg-black?style=flat-square&logo=github)](https://github.com/samuelsilvg)
 [![Static Badge](https://img.shields.io/badge/%7C%20silvagomes881%40gmail.com%20-black?style=flat-square&logo=gmail)](mailto:silvagomes881@gmail.com)

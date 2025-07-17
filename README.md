@@ -81,6 +81,74 @@ http://localhost:8000
 Caso tenha dúvidas ou queira contribuir com o projeto, acesse o repositório oficial no GitHub:
 🔗 [https://github.com/Jottynha/TRABALHO-SSL](https://github.com/Jottynha/TRABALHO-SSL)
 
+---
+
+## Fluxograma da Aplicação
+
+O diagrama abaixo representa o fluxo completo de funcionamento da aplicação, dividido em três grandes blocos: **Autenticação**, **Menu Principal** e **Ciclo do Jogo (Gameplay)**. Esse fluxograma ajuda a entender como o usuário interage com o sistema desde o login até o fim de uma sessão de jogo.
+
+* O usuário inicia autenticando-se no sistema (com login ou cadastro).
+* Após o login bem-sucedido, escolhe entre o **Modo de Lição** ou **Modo Infinito**.
+* O ciclo de jogo segue com perguntas, validações de resposta e verificação de progresso ou término da sessão.
+
+```mermaid
+graph TD
+    subgraph Autenticação
+        A[Início] --> B(Tela de Autenticação);
+        B --> C{Usuário tem conta?};
+        C -->|Sim| D[Preenche Login];
+        C -->|Não| E[Preenche Cadastro];
+        D --> F{Credenciais Válidas?};
+        E --> G[Salva Novo Usuário];
+        F -->|Sim| H(Tela de Boas-Vindas);
+        F -->|Não| I[Exibe Erro];
+        I --> B;
+        G --> H;
+    end
+
+    subgraph "Menu Principal"
+         H --> J{Escolhe o Modo};
+         J -->|Modo Lição| K(Menu de Lições);
+         J -->|Modo Infinito| L[Inicia Jogo Infinito];
+         K --> M[Escolhe a Lição];
+         M --> N(Início do Jogo);
+         L --> N;
+    end
+
+    subgraph "Ciclo do Jogo (Gameplay)"
+        N --> O[Configura a Pergunta];
+        O --> P{Aguardando Resposta};
+        P --> Q{Resposta Correta?};
+        Q -- Sim --> R["+ Pontos/Progresso"];
+        Q -- Não --> S["- Pontos/Vidas"];
+
+        R --> T{Lição Completa?};
+        T -- Sim --> U["Popup de Conclusão e Debloqueio"];
+        U --> K;
+        T -- Não --> O;
+
+        S --> V{"Fim de Jogo? (Modo Infinito)"};
+        V -- Sim --> W[Tela de Fim de Jogo];
+        W --> H;
+        V -- Não --> O;
+    end
+
+    style H fill:#d4edda,stroke:#155724
+    style W fill:#f8d7da,stroke:#721c24
+    style K fill:#cce5ff,stroke:#004085
+```
+
+> **Observações**:
+>
+> * O nó `H` (Tela de Boas-Vindas) marca o ponto de transição entre autenticação e jogo.
+> * Cores indicam tipos de nós:
+>
+>   * Verde: ponto de boas-vindas.
+>   * Vermelho: fim do jogo.
+>   * Azul claro: menus internos.
+
+---
+
 
 ### Estrutura do Projeto
 
@@ -866,3 +934,4 @@ ___
 
 ✉️ silvagomes881@gmail.com (**Samuel Silva Gomes**)
 --->
+

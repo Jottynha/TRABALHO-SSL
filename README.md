@@ -137,16 +137,6 @@ graph TD
     style W fill:#f8d7da,stroke:#721c24
     style K fill:#cce5ff,stroke:#004085
 ```
-
-> **Observações**:
->
-> * O nó `H` (Tela de Boas-Vindas) marca o ponto de transição entre autenticação e jogo.
-> * Cores indicam tipos de nós:
->
->   * Verde: ponto de boas-vindas.
->   * Vermelho: fim do jogo.
->   * Azul claro: menus internos.
-
 ---
 
 
